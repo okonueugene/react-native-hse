@@ -1,6 +1,4 @@
-import React, { useState, useRef, useEffect , useContext} from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import React, { useState, useContext } from "react";
 import {
     View,
     Text,
@@ -8,269 +6,16 @@ import {
     TouchableOpacity,
     Image,
     ScrollView,
-    StyleSheet,
-    DrawerLayoutAndroid
+    StyleSheet
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import MenuScreen from "../components/MenuScreen";
-import DashboardScreen from "./DashboardScreen";
-import AddIcaScreen from "./AddIcaScreen";
-import AddIncidentScreen from "./AddIncidentScreen";
-import AddRecordScreen from "./AddRecordScreen";
-import BadPractisesScreen from "./BadPractisesScreen";
-import EnvironmentalConcernsScreen from "./EnvironmentalConcernsScreen";
-import FirstAidCaseScreen from "./FirstAidCaseScreen";
-import GoodPractisesScreen from "./GoodPractisesScreen";
-import LostTimeAccidentScreen from "./LostTimeAccidentsScreen";
-import MedicalTreatmentCaseScreen from "./MedicalTreatedCaseScreen";
-import NearMissScreen from "./NearMissScreen";
-import OpenIncidentsScreen from "./OpenIncidentsScreen";
-import OpenSorsScreen from "./OpenSorsScreen";
-import PermitsApplicableScreen from "./PermitsApplicableScreen";
-import PersonnelScreen from "./PersonnelScreen";
-import ReportedHazardsScreen from "./ReportedHazardsScreen";
-import SIFScreen from "./SIFScreen";
-import SuggestedImprovementsScreen from "./SuggestedImprovementsScreen";
-import SupervisorScreen from "./SupervisorScreen";
-import TasksScreen from "./TasksScreen";
-import ViewIcaScreen from "./ViewIcaScreen";
-import FirstResponderScreen from "./FirstResponderScreen";
-import AddEnvironmentalConcerns from "./AddEnvironmentalConcerns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ApiManager from "../api/ApiManager";
 import Preloader from "../components/Preloader";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 import { MainContext } from "../storage/MainContext";
 
-const Stack = createStackNavigator();
 
-const LandingPage = () => {
-
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const drawerRef = useRef(null);
-
-    const toggleDrawer = () => {
-        setIsDrawerOpen(!isDrawerOpen);
-        if (!isDrawerOpen) {
-            drawerRef.current.openDrawer();
-        } else {
-            drawerRef.current.closeDrawer();
-        }
-    };
-
-
-
-    const closeDrawer = () => {
-        setIsDrawerOpen(false);
-        drawerRef.current.closeDrawer();
-    };
-
-
-    const navigationView = () => <MenuScreen closeDrawer={closeDrawer} />;
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-    // Function to check if user is logged in
-    const checkLogin = async () => {
-        try {
-            const token = await AsyncStorage.getItem("token");
-            if (token) {
-                setIsAuthenticated(true);
-            } else {
-                setIsAuthenticated(false);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    useEffect(() => {
-        checkLogin();
-    }, []);
-
-    return (
-        <NavigationContainer>
-            {isAuthenticated ? (
-                <DrawerLayoutAndroid
-                    ref={drawerRef}
-                    drawerWidth={200}
-                    drawerPosition="left"
-                    renderNavigationView={navigationView}
-                >
-                    <Stack.Navigator
-                        initialRouteName="Dashboard"
-                        screenOptions={{
-                            headerStyle: {
-                                backgroundColor: "#fbf7fc"
-                            },
-                            headerTintColor: "#fff",
-                            headerTitleAlign: "center",
-                            headerTitle: "Quality Health And Safety",
-                            headerTitleStyle: {
-                                fontWeight: "bold",
-                                fontSize: 20,
-                                color: "#007bff"
-                            },
-                            headerLeft: (props) => (
-                                <TouchableOpacity onPress={toggleDrawer}>
-                                    <Ionicons
-                                        name="menu"
-                                        size={30}
-                                        color="#007bff"
-                                        style={{ marginLeft: 10 }}
-                                    />
-                                </TouchableOpacity>
-                            )
-                        }}
-                    >
-
-                        <Stack.Screen name="Dashboard" component={DashboardScreen} />
-                        <Stack.Screen name="Supervisor" component={SupervisorScreen} />
-                        <Stack.Screen name="Personnel" component={PersonnelScreen} />
-                        <Stack.Screen name="First Responder" component={FirstResponderScreen} />
-                        <Stack.Screen name="Tasks" component={TasksScreen} />
-                        <Stack.Screen name="Open Incidents" component={OpenIncidentsScreen} />
-                        <Stack.Screen name="Open Sors" component={OpenSorsScreen} />
-                        <Stack.Screen
-                            name="Reported Hazards"
-                            component={ReportedHazardsScreen}
-                        />
-                        <Stack.Screen name="Near Miss" component={NearMissScreen} />
-                        <Stack.Screen
-                            name="Lost Time Accident"
-                            component={LostTimeAccidentScreen}
-                        />
-                        <Stack.Screen
-                            name="Medical Treatment Case"
-                            component={MedicalTreatmentCaseScreen}
-                        />
-                        <Stack.Screen name="First Aid Case" component={FirstAidCaseScreen} />
-                        <Stack.Screen name="SIF" component={SIFScreen} />
-                        <Stack.Screen
-                            name="Environmental Concerns"
-                            component={EnvironmentalConcernsScreen}
-                        />
-                        <Stack.Screen name="Bad Practises" component={BadPractisesScreen} />
-                        <Stack.Screen name="Good Practises" component={GoodPractisesScreen} />
-                        <Stack.Screen
-                            name="Suggested Improvements"
-                            component={SuggestedImprovementsScreen}
-                        />
-                        <Stack.Screen
-                            name="Permits Applicable"
-                            component={PermitsApplicableScreen}
-                        />
-                        <Stack.Screen name="Add Incident" component={AddIncidentScreen} />
-                        <Stack.Screen name="Add Record" component={AddRecordScreen} />
-                        <Stack.Screen name="Add Ica" component={AddIcaScreen} />
-                        <Stack.Screen name="View Ica" component={ViewIcaScreen} />
-                        <Stack.Screen
-                            name="Add Environment Concern"
-                            component={AddEnvironmentalConcerns}
-                        />
-
-                    </Stack.Navigator>
-                </DrawerLayoutAndroid>
-            ) : (
-                <DrawerLayoutAndroid
-                    ref={drawerRef}
-                    drawerWidth={200}
-                    drawerPosition="left"
-                    renderNavigationView={navigationView}
-                >
-                    <Stack.Navigator
-                        initialRouteName="Login"
-                        screenOptions={{
-                            headerStyle: {
-                                backgroundColor: "#fbf7fc"
-
-                            },
-                            headerTintColor: "#fff",
-                            headerTitleAlign: "center",
-                            headerTitle: "Quality Health And Safety",
-                            headerTitleStyle: {
-                                fontWeight: "bold",
-                                fontSize: 20,
-                                color: "#007bff"
-                            },
-
-                        }}
-                    >
-                        <Stack.Screen name="Login" component={LoginScreen} />
-                        {/* <Stack.Screen name="Dashboard" component={DashboardScreen} 
-                        screenOptions={{
-                            headerStyle: {
-                                backgroundColor: "#fbf7fc"
-                            },
-                            headerTintColor: "#fff",
-                            headerTitleAlign: "center",
-                            headerTitle: "Quality Health And Safety",
-                            headerTitleStyle: {
-                                fontWeight: "bold",
-                                fontSize: 20,
-                                color: "#007bff"
-                            },
-                            headerLeft: (props) => (
-                                <TouchableOpacity onPress={toggleDrawer}>
-                                    <Ionicons
-                                        name="menu"
-                                        size={30}
-                                        color="#007bff"
-                                        style={{ marginLeft: 10 }}
-                                    />
-                                </TouchableOpacity>
-                            )
-                        }}/>
-                        <Stack.Screen name="Supervisor" component={SupervisorScreen} />
-                        <Stack.Screen name="Personnel" component={PersonnelScreen} />
-                        <Stack.Screen name="Tasks" component={TasksScreen} />
-                        <Stack.Screen name="Open Incidents" component={OpenIncidentsScreen} />
-                        <Stack.Screen name="Open Sors" component={OpenSorsScreen} />
-                        <Stack.Screen
-                            name="Reported Hazards"
-                            component={ReportedHazardsScreen}
-                        />
-                        <Stack.Screen name="Near Miss" component={NearMissScreen} />
-                        <Stack.Screen
-                            name="Lost Time Accident"
-                            component={LostTimeAccidentScreen}
-                        />
-                        <Stack.Screen
-                            name="Medical Treatment Case"
-                            component={MedicalTreatmentCaseScreen}
-                        />
-                        <Stack.Screen name="First Aid Case" component={FirstAidCaseScreen} />
-                        <Stack.Screen name="SIF" component={SIFScreen} />
-                        <Stack.Screen
-                            name="Environmental Concerns"
-                            component={EnvironmentalConcernsScreen}
-                        />
-                        <Stack.Screen name="Bad Practises" component={BadPractisesScreen} />
-                        <Stack.Screen name="Good Practises" component={GoodPractisesScreen} />
-                        <Stack.Screen
-                            name="Suggested Improvements"
-                            component={SuggestedImprovementsScreen}
-                        />
-                        <Stack.Screen
-                            name="Permits Applicable"
-                            component={PermitsApplicableScreen}
-                        />
-                        <Stack.Screen name="Add Incident" component={AddIncidentScreen} />
-                        <Stack.Screen name="Add Record" component={AddRecordScreen} />
-                        <Stack.Screen name="Add Ica" component={AddIcaScreen} />
-                        <Stack.Screen name="View Ica" component={ViewIcaScreen} />
-                        <Stack.Screen
-                            name="Add Environment Concern"
-                            component={AddEnvironmentalConcerns}
-                        /> */}
-                    </Stack.Navigator>
-                </DrawerLayoutAndroid>
-
-            )}
-        </NavigationContainer>
-    );
-}
-
-export default LandingPage;
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState("");
@@ -286,50 +31,62 @@ const LoginScreen = ({ navigation }) => {
         setShowPassword(!showPassword);
     };
 
+
     const handleLogin = async () => {
         try {
             setIsLoading(true);
+            setErrorMessage("");
+            setSuccessMessage("");
 
+            // Make API request to login
             const response = await ApiManager.post("/login", {
                 email,
                 password
             });
+
             if (response.status === 200) {
-                // Save token to AsyncStorage
+                // Save user data to async storage
                 await AsyncStorage.setItem("token", response.data.token);
-                // Save user to AsyncStorage
                 await AsyncStorage.setItem("user", JSON.stringify(response.data.user));
 
-                //dispatch
-                dispatch({ type: 'LOGIN', payload: { user: response.data.user, token: response.data.token } });
+                // Dispatch user data to context
+                dispatch({ type: "LOGIN", payload: response.data });
 
-                //clear inputs
-                setEmail("");
-                setPassword("");
+                // Show success message
+                setSuccessMessage("Login successful");
 
-                setIsLoading(false); // Set loading state to false after successful login
-
-                setErrorMessage("");
-                setSuccessMessage("");
-  
+                // Fetch dashboard stats and navigate
+                await fetchDashboardStatsAndNavigate(response.data.token);
+            } else {
+                setErrorMessage("Invalid credentials");
             }
         } catch (error) {
-            setIsLoading(false); // Set loading state to false after login request completes
+            setErrorMessage("Invalid credentials");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-            // console.error(error);
-            if (error.response.status === 401) {
-                // Display error message
-                setErrorMessage("Invalid email or password");
-                setSuccessMessage(""); // Clear any previous success message
-            } else if (error.response.status === 422) {
-                // Display error message
-                setErrorMessage(error.response.data.message);
-                setSuccessMessage(""); // Clear any previous success message
+    // Fetch dashboard stats and navigate to Dashboard
+    const fetchDashboardStatsAndNavigate = async (token) => {
+        try {
+            const response = await ApiManager.get("/dashboard-stats", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (response.status === 200) {
+                // Store the dashboard stats in context or state
+                dispatch({ type: "SET_DASHBOARD_STATS", payload: response.data });
+
+                // Navigate to the Dashboard screen
+                navigation.navigate("Dashboard");
             } else {
-                // Display error message
-                setErrorMessage("An error occurred. Please try again later.");
-                setSuccessMessage(""); // Clear any previous success message
+                console.log("Error fetching dashboard stats");
             }
+        } catch (error) {
+            console.error("Error fetching dashboard stats", error);
         }
     };
 
@@ -508,3 +265,5 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff"
     }
 });
+
+export default LoginScreen;

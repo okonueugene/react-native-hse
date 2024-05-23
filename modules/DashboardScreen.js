@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -13,19 +13,21 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import Preloader from "../components/Preloader";
+import { MainContext } from "../storage/MainContext";
 
 
 const DashboardScreen = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [dashboardStats, setDashboardStats] = useState(null);
   const drawerRef = useRef(null);
   const navigation = useNavigation();
-
+  const { state, dispatch } = useContext(MainContext);
   const [loading, setLoading] = useState(false);
+  const { dashboardStats } = state;
 
   useEffect(() => {
-    // Fetch dashboard stats when component mounts
-    fetchDashboardStats();
+    if (!dashboardStats) {
+      fetchDashboardStats();
+    }
   }, []);
 
   const fetchDashboardStats = async () => {
@@ -46,7 +48,7 @@ const DashboardScreen = () => {
 
       if (response.status === 200) {
         console.log(response.data);
-        setDashboardStats(response.data);
+        dispatch({ type: "SET_DASHBOARD_STATS", payload: response.data });
       } else {
         console.log("Error fetching dashboard stats");
       }
@@ -88,7 +90,7 @@ const DashboardScreen = () => {
 
 
   return (
-    
+
     <View style={{ flex: 1 }}>
       <DrawerLayoutAndroid
         ref={drawerRef}

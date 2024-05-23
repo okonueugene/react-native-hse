@@ -1,9 +1,11 @@
 import React, { useContext, useEffect } from 'react';
 import Preloader from "./components/Preloader";
+import { NavigationContainer } from '@react-navigation/native';
 import { View, StyleSheet } from "react-native";
-import LandingPage from "./modules/Login";
+import AuthStack from './navigation/AuthStack';
+import AppStack from './navigation/AppStack';
+import { MainContext, MainProvider } from "./storage/MainContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MainContext , MainProvider } from "./storage/MainContext";
 
 const App = () => {
   return (
@@ -15,7 +17,7 @@ const App = () => {
 };
 
 const AppContainer = () => {
-  
+
   const { state, dispatch } = useContext(MainContext);
 
   const checkLogin = async () => {
@@ -44,10 +46,14 @@ const AppContainer = () => {
     );
   }
 
-  return state.isAuthenticated ? <LandingPage /> : <Preloader />;
+  return (
+    <NavigationContainer>
+      {state.isAuthenticated ? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
+  );
 };
 
- 
+
 const styles = StyleSheet.create({
   preloaderContainer: {
     flex: 1,

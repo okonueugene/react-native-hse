@@ -15,26 +15,31 @@ const MainContext = createContext(initialState);
 //reducer
 const appReducer = (state, action) => {
     switch (action.type) {
-        case 'LOGIN':
+        case "LOGIN":
             return {
                 ...state,
                 isAuthenticated: true,
-                isLoading: false,
                 user: action.payload.user,
-                token: action.payload.token
+                token: action.payload.token,
+                isLoading: false,
             };
-        case 'LOGOUT':
+        case "SET_DASHBOARD_STATS":
+            return {
+                ...state,
+                dashboardStats: action.payload,
+            };
+        case "LOGOUT":
             return {
                 ...state,
                 isAuthenticated: false,
-                isLoading: false,
                 user: null,
-                token: null
+                token: null,
+                dashboardStats: null,
             };
-        case 'SET_LOADING':
+        case "SET_LOADING":
             return {
                 ...state,
-                isLoading: action.payload
+                isLoading: action.payload,
             };
         default:
             return state;
