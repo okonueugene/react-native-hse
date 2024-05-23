@@ -361,7 +361,7 @@ const LoginScreen = ({ navigation }) => {
                             value={email}
                             onChangeText={setEmail}
                             autoCapitalize="none"
-                            autoFocus
+                            autoFocus={false}
                         />
 
                         {/* Password input */}
@@ -372,6 +372,8 @@ const LoginScreen = ({ navigation }) => {
                                 value={password}
                                 onChangeText={setPassword}
                                 secureTextEntry={!showPassword}
+                                autoFocus={false}
+
                             />
                             <TouchableOpacity
                                 onPress={handleTogglePassword}
