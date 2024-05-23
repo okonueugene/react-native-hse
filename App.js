@@ -1,32 +1,53 @@
-import React, { useState } from "react";
-import LandingPage from "./modules/Login";
+import React, { useContext, useEffect } from 'react';
 import Preloader from "./components/Preloader";
 import { View, StyleSheet } from "react-native";
+import LandingPage from "./modules/Login";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MainContext , MainProvider } from "./storage/MainContext";
 
 const App = () => {
-
-  const [isAppReady, setAppReady] = useState(false);
-
-  const checkIfAppReady = () => {
-    setTimeout(() => {
-      setAppReady(true);
-    }, 3000);
-  }
-
-  checkIfAppReady();
-
-  if (!isAppReady) {
-    return <View style={styles.preloaderContainer}>
-      <Preloader />
-    </View>;
-  }
-  else{
-    return <LandingPage />;
-  
-  }
+  return (
+    <MainProvider>
+      <AppContainer />
+    </MainProvider>
+  );
 
 };
 
+const AppContainer = () => {
+  
+  const { state, dispatch } = useContext(MainContext);
+
+  const checkLogin = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const user = JSON.parse(await AsyncStorage.getItem('user'));
+      if (token && user) {
+        dispatch({ type: 'LOGIN', payload: { token, user } });
+      } else {
+        dispatch({ type: 'SET_LOADING', payload: false });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    checkLogin();
+  }, []);
+
+  if (state.isLoading) {
+    return (
+      <View style={styles.preloaderContainer}>
+        <Preloader />
+      </View>
+    );
+  }
+
+  return state.isAuthenticated ? <LandingPage /> : <Preloader />;
+};
+
+ 
 const styles = StyleSheet.create({
   preloaderContainer: {
     flex: 1,

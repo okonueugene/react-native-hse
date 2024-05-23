@@ -88,6 +88,7 @@ const DashboardScreen = () => {
 
 
   return (
+    
     <View style={{ flex: 1 }}>
       <DrawerLayoutAndroid
         ref={drawerRef}
@@ -109,7 +110,7 @@ const DashboardScreen = () => {
             </View>
           )}
           {/* Render the dashboard content */}
-          {!loading && (
+          {!loading && dashboardStats && (
             <View style={styles.content}>
               {/* First Row */}
               <View style={styles.row}>

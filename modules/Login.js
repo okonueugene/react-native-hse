@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect , useContext} from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import {
@@ -40,6 +40,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ApiManager from "../api/ApiManager";
 import Preloader from "../components/Preloader";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
+import { MainContext } from "../storage/MainContext";
 
 const Stack = createStackNavigator();
 
@@ -74,10 +75,11 @@ const LandingPage = () => {
             const token = await AsyncStorage.getItem("token");
             if (token) {
                 setIsAuthenticated(true);
+            } else {
+                setIsAuthenticated(false);
             }
         } catch (error) {
             console.error(error);
-            setIsAuthenticated(false);
         }
     };
 
@@ -121,7 +123,6 @@ const LandingPage = () => {
                         }}
                     >
 
-                        <Stack.Screen name="Login" component={LoginScreen} />
                         <Stack.Screen name="Dashboard" component={DashboardScreen} />
                         <Stack.Screen name="Supervisor" component={SupervisorScreen} />
                         <Stack.Screen name="Personnel" component={PersonnelScreen} />
@@ -170,27 +171,100 @@ const LandingPage = () => {
                     </Stack.Navigator>
                 </DrawerLayoutAndroid>
             ) : (
-
-                <Stack.Navigator
-                    initialRouteName="Login"
-                    screenOptions={{
-                        headerStyle: {
-                            backgroundColor: "#fbf7fc"
-
-                        },
-                        headerTintColor: "#fff",
-                        headerTitleAlign: "center",
-                        headerTitle: "Quality Health And Safety",
-                        headerTitleStyle: {
-                            fontWeight: "bold",
-                            fontSize: 20,
-                            color: "#007bff"
-                        },
-
-                    }}
+                <DrawerLayoutAndroid
+                    ref={drawerRef}
+                    drawerWidth={200}
+                    drawerPosition="left"
+                    renderNavigationView={navigationView}
                 >
-                    <Stack.Screen name="Login" component={LoginScreen} />
-                </Stack.Navigator>
+                    <Stack.Navigator
+                        initialRouteName="Login"
+                        screenOptions={{
+                            headerStyle: {
+                                backgroundColor: "#fbf7fc"
+
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleAlign: "center",
+                            headerTitle: "Quality Health And Safety",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 20,
+                                color: "#007bff"
+                            },
+
+                        }}
+                    >
+                        <Stack.Screen name="Login" component={LoginScreen} />
+                        {/* <Stack.Screen name="Dashboard" component={DashboardScreen} 
+                        screenOptions={{
+                            headerStyle: {
+                                backgroundColor: "#fbf7fc"
+                            },
+                            headerTintColor: "#fff",
+                            headerTitleAlign: "center",
+                            headerTitle: "Quality Health And Safety",
+                            headerTitleStyle: {
+                                fontWeight: "bold",
+                                fontSize: 20,
+                                color: "#007bff"
+                            },
+                            headerLeft: (props) => (
+                                <TouchableOpacity onPress={toggleDrawer}>
+                                    <Ionicons
+                                        name="menu"
+                                        size={30}
+                                        color="#007bff"
+                                        style={{ marginLeft: 10 }}
+                                    />
+                                </TouchableOpacity>
+                            )
+                        }}/>
+                        <Stack.Screen name="Supervisor" component={SupervisorScreen} />
+                        <Stack.Screen name="Personnel" component={PersonnelScreen} />
+                        <Stack.Screen name="Tasks" component={TasksScreen} />
+                        <Stack.Screen name="Open Incidents" component={OpenIncidentsScreen} />
+                        <Stack.Screen name="Open Sors" component={OpenSorsScreen} />
+                        <Stack.Screen
+                            name="Reported Hazards"
+                            component={ReportedHazardsScreen}
+                        />
+                        <Stack.Screen name="Near Miss" component={NearMissScreen} />
+                        <Stack.Screen
+                            name="Lost Time Accident"
+                            component={LostTimeAccidentScreen}
+                        />
+                        <Stack.Screen
+                            name="Medical Treatment Case"
+                            component={MedicalTreatmentCaseScreen}
+                        />
+                        <Stack.Screen name="First Aid Case" component={FirstAidCaseScreen} />
+                        <Stack.Screen name="SIF" component={SIFScreen} />
+                        <Stack.Screen
+                            name="Environmental Concerns"
+                            component={EnvironmentalConcernsScreen}
+                        />
+                        <Stack.Screen name="Bad Practises" component={BadPractisesScreen} />
+                        <Stack.Screen name="Good Practises" component={GoodPractisesScreen} />
+                        <Stack.Screen
+                            name="Suggested Improvements"
+                            component={SuggestedImprovementsScreen}
+                        />
+                        <Stack.Screen
+                            name="Permits Applicable"
+                            component={PermitsApplicableScreen}
+                        />
+                        <Stack.Screen name="Add Incident" component={AddIncidentScreen} />
+                        <Stack.Screen name="Add Record" component={AddRecordScreen} />
+                        <Stack.Screen name="Add Ica" component={AddIcaScreen} />
+                        <Stack.Screen name="View Ica" component={ViewIcaScreen} />
+                        <Stack.Screen
+                            name="Add Environment Concern"
+                            component={AddEnvironmentalConcerns}
+                        /> */}
+                    </Stack.Navigator>
+                </DrawerLayoutAndroid>
+
             )}
         </NavigationContainer>
     );
@@ -205,6 +279,7 @@ const LoginScreen = ({ navigation }) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const { dispatch } = useContext(MainContext);
 
 
     const handleTogglePassword = () => {
@@ -225,6 +300,9 @@ const LoginScreen = ({ navigation }) => {
                 // Save user to AsyncStorage
                 await AsyncStorage.setItem("user", JSON.stringify(response.data.user));
 
+                //dispatch
+                dispatch({ type: 'LOGIN', payload: { user: response.data.user, token: response.data.token } });
+
                 //clear inputs
                 setEmail("");
                 setPassword("");
@@ -233,8 +311,7 @@ const LoginScreen = ({ navigation }) => {
 
                 setErrorMessage("");
                 setSuccessMessage("");
-                // Navigate to Dashboard screen
-                navigation.navigate("Dashboard");
+  
             }
         } catch (error) {
             setIsLoading(false); // Set loading state to false after login request completes
@@ -280,7 +357,7 @@ const LoginScreen = ({ navigation }) => {
                         {/* Email input */}
                         <TextInput
                             style={styles.input}
-                            placeholder="Enter your email or username"
+                            placeholder="Enter your Email or Username"
                             value={email}
                             onChangeText={setEmail}
                             autoCapitalize="none"
