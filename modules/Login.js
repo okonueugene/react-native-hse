@@ -94,8 +94,8 @@ const LoginScreen = ({ navigation }) => {
         <KeyboardAvoidingWrapper>
             <ScrollView contentContainerStyle={styles.container}>
                 {isLoading ? ( // Render preloader if isLoading is true
-                    <View style={[styles.blinkingImageContainer, StyleSheet.absoluteFill]}>
-                        <Preloader />
+                      <View style={styles.preloaderContainer}>
+                      <Preloader />
                     </View>
                 ) : (
                     <>
@@ -259,10 +259,10 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginTop: 10
     },
-    blinkingImageContainer: {
+    preloaderContainer: {
+        flex: 1,
         justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#fff"
+        alignItems: "center"
     }
 });
 

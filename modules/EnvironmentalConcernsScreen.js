@@ -15,6 +15,8 @@ import MenuScreen from "../components/MenuScreen";
 import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
+import { useNavigation } from "@react-navigation/native";
+
 
 const ViewConcernModal = ({ concern, onClose, visible }) => {
   if (!visible || !concern) {
@@ -112,6 +114,8 @@ const EnvironmentalConcernsScreen = () => {
   const [selectedConcern, setSelectedConcern] = useState(null);
   const [isViewConcernModalOpen, setIsViewConcernModalOpen] = useState(false);
 
+  const navigation = useNavigation();
+
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -156,7 +160,22 @@ const EnvironmentalConcernsScreen = () => {
       }
     } catch (error) {
       setLoading(false);
-      console.error(error);
+      if (error.response.status === 401) {
+
+        alert("You are not authorized to view this page try logging in again");
+
+        //remove token from async storage
+
+        await AsyncStorage.removeItem("token");
+
+        await AsyncStorage.removeItem("user");
+
+        //redirect to dashboard page
+
+        navigation.navigate("Dashboard");
+
+      }
+
     }
   }
 

@@ -242,7 +242,19 @@ const SupervisorScreen = () => {
       }
     } catch (error) {
       console.log(error);
-      alert("Error fetching supervisors");
+      if (error.response && error.response.status === 401) {
+        alert("You are not authorized to view this page try logging in again");
+
+        //remove token from async storage
+
+        await AsyncStorage.removeItem("token");
+
+        await AsyncStorage.removeItem("user");
+
+        //redirect to dashboard page
+
+        navigation.navigate("Dashboard");
+      }
     } finally {
       setIsLoading(false);
     }

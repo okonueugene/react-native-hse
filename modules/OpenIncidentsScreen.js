@@ -16,6 +16,8 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
+import { useNavigation } from "@react-navigation/native";
+
 
 const ViewIncidentModal = ({ incident, onClose, visible }) => {
   if (!visible || !incident) {
@@ -136,14 +138,7 @@ const OpenIncidentsScreen = () => {
   const [isViewIncidentModalOpen, setIsViewIncidentModalOpen] = useState(false);
   const [selectedIncident, setSelectedIncident] = useState(null);
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
-    }
-  };
+const navigation = useNavigation();
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -173,8 +168,21 @@ const OpenIncidentsScreen = () => {
         setLoading(false);
       }
     } catch (error) {
-      console.error(error);
       setLoading(false);
+
+      // Redirect to login screen if token is invalid
+      if (error.response && error.response.status === 401) {
+        alert("You are not authorized to view this page try logging in again");
+
+        //remove token from async storage
+
+        await AsyncStorage.removeItem("token");
+
+        await AsyncStorage.removeItem("user");
+
+        //redirect to dashboard page
+
+        navigation.navigate("Dashboard");      }
     }
   };
 

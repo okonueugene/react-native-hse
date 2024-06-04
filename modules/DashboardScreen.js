@@ -28,6 +28,8 @@ const DashboardScreen = () => {
     if (!dashboardStats) {
       fetchDashboardStats();
     }
+    fetchDashboardStats();
+
   }, []);
 
   const fetchDashboardStats = async () => {
@@ -67,14 +69,6 @@ const DashboardScreen = () => {
     }
   };
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
-    }
-  };
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -83,6 +77,12 @@ const DashboardScreen = () => {
   const closeDrawer = () => {
     setIsDrawerOpen(false);
     drawerRef.current.closeDrawer();
+  };
+
+  //handle navigation to pages
+  const navigateToPage = (route) => {
+    navigation.navigate(route);
+    closeDrawer();
   };
 
   const navigationView = () => <MenuScreen closeDrawer={closeDrawer} />;
@@ -117,38 +117,47 @@ const DashboardScreen = () => {
               {/* First Row */}
               <View style={styles.row}>
                 <View style={styles.card}>
+                <TouchableOpacity style={styles.link} onPress={() => navigateToPage("Dashboard")}>
                   <Text style={styles.cardHeader}>Site Name</Text>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardContent}>Test</Text>
                   </View>
                   <Text style={styles.cardFooter}></Text>
+                  </TouchableOpacity>
                 </View>
                 {/* Add other cards here */}
                 <View style={styles.card}>
+                  <TouchableOpacity style={styles.link} onPress={() => navigateToPage("Supervisor")}>
                   <Text style={styles.cardHeader}>Supervisor’s Detail</Text>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardContent}>{dashboardStats?.supervisor}</Text>
                   </View>
                   <Text style={styles.cardFooter}></Text>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.card}>
+                  <TouchableOpacity style={styles.link} onPress={() => navigateToPage("First Responder")}>
                   <Text style={styles.cardHeader}>Fire Marshal’s Detail</Text>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardContent}>{dashboardStats?.fire_marshal}</Text>
                   </View>
                   <Text style={styles.cardFooter}></Text>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.card}>
+                  <TouchableOpacity style={styles.link} onPress={() => navigateToPage("First Responder")}>
                   <Text style={styles.cardHeader}>First Aider’s Detail</Text>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardContent}>{dashboardStats?.first_aider}</Text>
                   </View>
                   <Text style={styles.cardFooter}></Text>
+                  </TouchableOpacity>
                 </View>
               </View>
               {/* Second Row */}
               <View style={styles.row}>
                 <View style={styles.card}>
+                  <TouchableOpacity style={styles.link} onPress={() => navigateToPage("Personnel")}>
                   <Text style={styles.cardHeader}>
                     Live Number Of People On Site
                   </Text>
@@ -156,53 +165,66 @@ const DashboardScreen = () => {
                     <Text style={styles.cardContent}>{dashboardStats?.personells}</Text>
                   </View>
                   <Text style={styles.cardFooter}></Text>
+                  </TouchableOpacity>
                 </View>
                 {/* Add other cards here */}
                 <View style={styles.card}>
+                  <TouchableOpacity style={styles.link} onPress={() => navigateToPage("Tasks")}>
                   <Text style={styles.cardHeader}>Tasks Of The Day</Text>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardContent}>{dashboardStats?.tasks}</Text>
                   </View>
                   <Text style={styles.cardFooter}></Text>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.card}>
+                  <TouchableOpacity style={styles.link} onPress={() => navigateToPage("Open Incidents")}>
                   <Text style={styles.cardHeader}>Incidents Recorded</Text>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardContent}>{dashboardStats?.incidents}</Text>
                   </View>
                   <Text style={styles.cardFooter}></Text>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.card}>
+                  <TouchableOpacity style={styles.link} onPress={() => navigateToPage("View Ica")}>
                   <Text style={styles.cardHeader}>Immediate Corrective Actions</Text>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardContent}>{dashboardStats?.icas}</Text>
                   </View>
                   <Text style={styles.cardFooter}></Text>
+                  </TouchableOpacity>
                 </View>
               </View>
               {/* Third Row */}
               <View style={styles.row}>
                 <View style={styles.card}>
+                  <TouchableOpacity style={styles.link} onPress={() => navigateToPage("Open Sors")}>
                   <Text style={styles.cardHeader}>Safety Observation Record</Text>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardContent}>{dashboardStats?.sors}</Text>
                   </View>
                   <Text style={styles.cardFooter}></Text>
+                  </TouchableOpacity>
                 </View>
                 {/* Add other cards here */}
                 <View style={styles.card}>
+                  <TouchableOpacity style={styles.link} onPress={() => navigateToPage("Environmental Concerns")}>
                   <Text style={styles.cardHeader}>Environmental Concerns</Text>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardContent}>{dashboardStats?.environmental_concerns}</Text>
                   </View>
                   <Text style={styles.cardFooter}></Text>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.card}>
+                  <TouchableOpacity style={styles.link} onPress={() => navigateToPage("Permits Applicable")}>
                   <Text style={styles.cardHeader}>Permits Applicable</Text>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardContent}>{dashboardStats?.permits}</Text>
                   </View>
                   <Text style={styles.cardFooter}></Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -284,6 +306,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
+  },
+  link: {
+   flex: 1,
+   backgroundColor:"transparent"
   }
 });
 

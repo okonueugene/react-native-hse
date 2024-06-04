@@ -16,6 +16,7 @@ import MenuScreen from "../components/MenuScreen";
 import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
+import { useNavigation } from "@react-navigation/native";
 
 const ViewTaskModal = ({ task, onClose, visible }) => {
   if (!visible || !task) {
@@ -122,14 +123,8 @@ const TasksScreen = () => {
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
   const [selectedBadPractice, setSelectedBadPractice] = useState(null);
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
-    }
-  };
+  const navigation = useNavigation();
+
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -170,7 +165,19 @@ const TasksScreen = () => {
       }
     } catch (error) {
       setIsLoading(false);
-      console.error(error);
+      if (error.response && error.response.status === 401) {
+        alert("You are not authorized to view this page try logging in again");
+
+        //remove token from async storage
+
+        await AsyncStorage.removeItem("token");
+
+        await AsyncStorage.removeItem("user");
+
+        //redirect to dashboard page
+
+        navigation.navigate("Dashboard");
+      }
     }
   };
 

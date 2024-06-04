@@ -16,6 +16,8 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
+import { useNavigation } from "@react-navigation/native";
+
 
 const ViewSorModal = ({ visible, sor, onClose }) => {
   if (!visible || !sor) {
@@ -120,6 +122,8 @@ const OpenSorsScreen = () => {
   const [loading, setLoading] = useState(false);
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
 
+  const navigation = useNavigation();
+
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
     if (!isDrawerOpen) {
@@ -165,9 +169,23 @@ const OpenSorsScreen = () => {
       }
     } catch (error) {
       setLoading(false);
+      if (error.response.status === 401) {
 
-      console.error(error);
-    }
+        alert("You are not authorized to view this page try logging in again");
+
+        //remove token from async storage
+
+        await AsyncStorage.removeItem("token");
+
+        await AsyncStorage.removeItem("user");
+
+        //redirect to dashboard page
+
+        navigation.navigate("Dashboard");
+
+      }
+
+      }
   };
 
   useEffect(() => {

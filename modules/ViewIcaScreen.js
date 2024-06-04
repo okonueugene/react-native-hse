@@ -16,6 +16,7 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
+import { useNavigation } from "@react-navigation/native";
 
 const ViewICAModal = ({ ica, onClose, visible }) => {
   if (!visible || !ica) {
@@ -132,14 +133,7 @@ const ViewIcaScreen = () => {
   const [selectedIca, setSelectedIca] = useState(null);
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
-    }
-  };
+const navigation = useNavigation();
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -167,6 +161,22 @@ const ViewIcaScreen = () => {
     } catch (err) {
       console.log(err);
       setLoading(false);
+      if (err.response.status === 401) {
+
+        alert("You are not authorized to view this page try logging in again");
+
+        //remove token from async storage
+
+        await AsyncStorage.removeItem("token");
+
+        await AsyncStorage.removeItem("user");
+
+        //redirect to dashboard page
+
+        navigation.navigate("Dashboard");
+
+      }
+
     }
   };
 
