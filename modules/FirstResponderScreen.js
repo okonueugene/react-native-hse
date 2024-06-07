@@ -236,14 +236,6 @@ const FirstResponderScreen = () => {
     const [isAddFirstResponderModalVisible, setIsAddFirstResponderModalVisible] = useState(false);
 
 
-    const toggleDrawer = () => {
-        setIsDrawerOpen(!isDrawerOpen);
-        if (!isDrawerOpen) {
-            drawerRef.current.openDrawer();
-        } else {
-            drawerRef.current.closeDrawer();
-        }
-    };
 
     const handleOutsideTouch = () => {
         closeDrawer(); // Close the drawer when touched outside
@@ -260,6 +252,37 @@ const FirstResponderScreen = () => {
         // Replace underscores with spaces and capitalize each word
         return text.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
     }
+
+    const deleteFirstResponder = async (id) => {
+        setLoading(true);
+        try {
+            // Fetch token from async storage
+            const token = await AsyncStorage.getItem("token");
+
+            // Fetch firtsResponders
+            const response = await ApiManager.delete(`/delete-first-responder/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            // Handle the response
+            if (response.status === 200) {
+                alert("First Responder deleted successfully");
+                setLoading(false);
+                // Refresh the first responders
+                retrieveFirstResponders();
+            } else {
+                console.error(response.data);
+                setLoading(false);
+            }
+        }
+        catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
+    };
+
 
     const retrieveFirstResponders = async () => {
         setLoading(true);
@@ -345,7 +368,7 @@ const FirstResponderScreen = () => {
                     </Text>
                     <TouchableOpacity
                         style={{
-                            backgroundColor: "#007bff",
+                            backgroundColor: "transparent",
                             padding: 4,
                             borderRadius: 5,
                             marginRight: 16,
@@ -355,7 +378,21 @@ const FirstResponderScreen = () => {
                         }}
                         onPress={() => handleViewFirstResponder(firstResponder)}
                     >
-                        <Text style={{ color: "#fff" }}>View</Text>
+                        <Ionicons name="eye" size={16} color="blue" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: "transparent",
+                            padding: 4,
+                            borderRadius: 5,
+                            marginRight: 16,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: 30
+                        }}
+                        onPress={() => deleteFirstResponder(firstResponder.id)}
+                    >
+                        <Ionicons name="trash" size={16} color="red" />
                     </TouchableOpacity>
                 </View>
             ));

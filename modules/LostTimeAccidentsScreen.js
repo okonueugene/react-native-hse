@@ -137,18 +137,33 @@ const LostTimeAccidentsScreen = () => {
   const [loading, setLoading] = useState(false);
   const [itemsPerPage] = useState(8);
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
-    }
-  };
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
   };
+
+  const deleteLostTimeAccident = async (id) => {
+    setLoading(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      const response = await ApiManager.delete(`/delete-incident/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (response.status === 200) {
+        alert("Lost Time Accident deleted successfully");
+        getLostTimeAccidents();
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
@@ -192,7 +207,7 @@ const LostTimeAccidentsScreen = () => {
   };
 
   const handleViewLostTimeAccident = (losttimeaccident) => {
-    setSelectedCase(losttimeaccident);  
+    setSelectedCase(losttimeaccident);
     setModalVisible(true);
   };
 
@@ -215,7 +230,7 @@ const LostTimeAccidentsScreen = () => {
             </Text>
             <TouchableOpacity
               style={{
-                backgroundColor: "#007bff",
+                backgroundColor: "transparent",
                 padding: 4,
                 borderRadius: 5,
                 marginRight: 16,
@@ -225,7 +240,20 @@ const LostTimeAccidentsScreen = () => {
               }}
               onPress={() => handleViewLostTimeAccident(lostTimeAccident)}
             >
-              <Text style={{ color: "#fff" }}>View</Text>
+              <Ionicons name="eye" size={14} color="blue" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "transparent",
+                padding: 4,
+                borderRadius: 5,
+                justifyContent: "center",
+                alignItems: "center",
+                height: 30
+              }}
+              onPress={() => deleteLostTimeAccident(lostTimeAccident.id)}
+            >
+              <Ionicons name="trash" size={14} color="red" />
             </TouchableOpacity>
           </View>
         ))
@@ -396,7 +424,8 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    width: "100%"
   },
   modalHeader: {
     flexDirection: "row",

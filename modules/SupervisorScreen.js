@@ -81,7 +81,7 @@ const SupervisorDetailModal = ({ supervisor, isVisible, onClose }) => {
   );
 };
 
-const AddSupervisorModal = ({ isVisible, onClose }) => {
+const AddSupervisorModal = ({ isVisible, onClose, retrieveSupervisors }) => {
   if (!isVisible) {
     return null;
   }
@@ -128,7 +128,7 @@ const AddSupervisorModal = ({ isVisible, onClose }) => {
         setIsLoading(false);
         onClose();
 
-        // retrieveSupervisors();
+        retrieveSupervisors();
       }
     }
     catch (error) {
@@ -261,16 +261,34 @@ const SupervisorScreen = () => {
 
   };
 
+const deleteSupervisor = async (id) => {
+  try {
+    // Fetch token from async storage
+    const token = await AsyncStorage.getItem("token");
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      console.log(isDrawerOpen);
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
+    // url = "/delete-supervisor/{id}";
+
+    // Make a DELETE request to delete supervisor
+    const response = await ApiManager.delete(`/delete-supervisor/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (response.status === 200) {
+      alert("Supervisor deleted successfully");
+      retrieveSupervisors();
     }
-  };
+
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 401) {
+      alert("You are not authorized to view this page try logging in again");
+    }
+  }
+};
+
+
 
   const handleOutsideTouch = () => {
 
@@ -327,7 +345,7 @@ const SupervisorScreen = () => {
 
           <TouchableOpacity
             style={{
-              backgroundColor: "#007bff",
+              backgroundColor: "transparent",
               padding: 4,
               borderRadius: 5,
               marginRight: 16,
@@ -337,7 +355,21 @@ const SupervisorScreen = () => {
             }}
             onPress={() => handleSupervisorDetail(supervisor)}
           >
-            <Text style={{ color: "#fff" }}>View</Text>
+            <Ionicons name="eye" size={12} color="blue" />
+
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "transparent",
+              padding: 4,
+              borderRadius: 5,
+              justifyContent: "center",
+              alignItems: "center",
+              height: 30
+            }}
+            onPress={() => deleteSupervisor(supervisor.id)}
+          >
+            <Ionicons name="trash" size={12} color="red" />
           </TouchableOpacity>
         </View>
       ));
@@ -416,6 +448,7 @@ const SupervisorScreen = () => {
                 <AddSupervisorModal
                   isVisible={isAddSupervisorModalVisible}
                   onClose={() => setIsAddSupervisorModalVisible(false)}
+                  retrieveSupervisors={retrieveSupervisors}
                 />
                 {/* View supervisor Modal */}
                 <SupervisorDetailModal

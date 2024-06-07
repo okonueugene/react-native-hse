@@ -82,7 +82,7 @@ const PersonnelDetailModal = ({ visible, onClose, personnel }) => {
 };
 
 
-const AddPersonnelModal = ({ visible, onClose , fetchPersonnelData}) => {
+const AddPersonnelModal = ({ visible, onClose, fetchPersonnelData }) => {
   if (!visible) {
     return null;
   }
@@ -226,15 +226,29 @@ const PersonnelScreen = () => {
     fetchPersonnelData();
   }, []);
 
+  const deletePersonnel = async (id) => {
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      const response = await ApiManager.delete(`/delete-personell/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (response.status === 200) {
+        alert("Personnel deleted successfully");
+        fetchPersonnelData();
+      } else {
+        alert("Error deleting personnel");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Error deleting personnel");
     }
   };
+
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -325,12 +339,9 @@ const PersonnelScreen = () => {
           <Text style={[styles.column, { flex: 1, marginRight: 16 }]}>
             {personnel.number}
           </Text>
-          <Text style={[styles.column, { flex: 1, marginRight: 16 }]}>
-            {personnel.date}
-          </Text>
           <TouchableOpacity
             style={{
-              backgroundColor: "#007bff",
+              backgroundColor: "transparent",
               padding: 4,
               borderRadius: 5,
               marginRight: 16,
@@ -340,7 +351,21 @@ const PersonnelScreen = () => {
             }}
             onPress={() => handleViewPersonnel(personnel)}
           >
-            <Text style={{ color: "#fff" }}>View</Text>
+            <Ionicons name="eye" size={16} color="blue" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "transparent",
+              padding: 4,
+              borderRadius: 5,
+              marginRight: 16,
+              justifyContent: "center",
+              alignItems: "center",
+              height: 30
+            }}
+            onPress={() => deletePersonnel(personnel.id)}
+          >
+            <Ionicons name="trash" size={16} color="red" />
           </TouchableOpacity>
         </View>
       ));
@@ -387,7 +412,6 @@ const PersonnelScreen = () => {
                 >
                   <Text style={[styles.heading, styles.column]}>Designation</Text>
                   <Text style={[styles.heading, styles.column]}>Number</Text>
-                  <Text style={[styles.heading, styles.column]}>Date</Text>
                   <Text style={[styles.heading, styles.column]}>Actions</Text>
                 </View>
                 {renderPersonnel()}

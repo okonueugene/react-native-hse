@@ -226,7 +226,7 @@ const navigation = useNavigation();
             </Text>
             <TouchableOpacity
               style={{
-                backgroundColor: "#007bff",
+                backgroundColor: "transparent",
                 padding: 4,
                 borderRadius: 5,
                 marginRight: 16,
@@ -236,7 +236,20 @@ const navigation = useNavigation();
               }}
               onPress={() => handleViewIncident(incident)}
             >
-              <Text style={{ color: "#fff" }}>View</Text>
+              <Ionicons name="eye" size={16} color="#1520f2" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "transparent",
+                padding: 4,
+                borderRadius: 5,
+                justifyContent: "center",
+                alignItems: "center",
+                height: 30
+              }}
+              onPress={() => handleViewIncident(incident)}
+            >
+              <Ionicons name="trash" size={16} color="#f21313" />
             </TouchableOpacity>
           </View>
         ))
@@ -407,7 +420,8 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    width: "100%"
   },
   modalHeader: {
     flexDirection: "row",

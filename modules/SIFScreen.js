@@ -138,18 +138,36 @@ const SIFCaseScreen = () => {
   const [isViewSIFModalOpen, setIsViewSIFModalOpen] = useState(null);
   const [selectedSIF, setSelectedSIF] = useState(null);
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
-    }
-  };
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
   };
+
+  const deleteSIF = async (id) => {
+    setLoading(true);
+
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      const response = await ApiManager.delete(`/delete-incident/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+
+      });
+
+      if (response.status === 200) {
+        alert("SIF case deleted successfully");
+        fetchSIFCases();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
@@ -217,7 +235,7 @@ const SIFCaseScreen = () => {
             </Text>
             <TouchableOpacity
               style={{
-                backgroundColor: "#007bff",
+                backgroundColor: "transparent",
                 padding: 4,
                 borderRadius: 5,
                 marginRight: 16,
@@ -227,7 +245,21 @@ const SIFCaseScreen = () => {
               }}
               onPress={() => handleViewSIF(sif)}
             >
-              <Text style={{ color: "#fff" }}>View</Text>
+              <Ionicons name="eye" size={14} color="blue" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "transparent",
+                padding: 4,
+                borderRadius: 5,
+                marginRight: 16,
+                justifyContent: "center",
+                alignItems: "center",
+                height: 30
+              }}
+              onPress={() => deleteSIF(sif.id)}
+            >
+              <Ionicons name="trash" size={14} color="red" />
             </TouchableOpacity>
           </View>
         ))
@@ -396,7 +428,8 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    width: "100%"
   },
   modalHeader: {
     flexDirection: "row",

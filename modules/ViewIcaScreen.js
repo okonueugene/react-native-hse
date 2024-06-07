@@ -133,7 +133,7 @@ const ViewIcaScreen = () => {
   const [selectedIca, setSelectedIca] = useState(null);
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
 
-const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -142,6 +142,31 @@ const navigation = useNavigation();
   const closeDrawer = () => {
     setIsDrawerOpen(false);
     drawerRef.current.closeDrawer();
+  };
+
+  const deleteIca = async (id) => {
+    setLoading(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
+      // Send a DELETE request to the API
+      const response = await ApiManager.delete(`/delete-ica/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (response.status === 200) {
+        //Display a success message
+        alert("ICA deleted successfully");
+        // Fetch the ICAs again
+        fetchICAs();
+      }
+
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
   };
 
   const fetchICAs = async () => {
@@ -220,7 +245,7 @@ const navigation = useNavigation();
             </Text>
             <TouchableOpacity
               style={{
-                backgroundColor: "#007bff",
+                backgroundColor: "transparent",
                 padding: 4,
                 borderRadius: 5,
                 marginRight: 16,
@@ -230,7 +255,21 @@ const navigation = useNavigation();
               }}
               onPress={() => handleViewIca(ica)} // Pass the SOR to the handler
             >
-              <Text style={{ color: "#fff" }}>View</Text>
+              <Ionicons name="eye" size={16} color="#2a19e8" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "transparent",
+                padding: 4,
+                borderRadius: 5,
+                marginRight: 16,
+                justifyContent: "center",
+                alignItems: "center",
+                height: 30
+              }}
+              onPress={() => deleteIca(ica.id)} // Pass the SOR ID to the handler
+            >
+              <Ionicons name="trash" size={16} color="#f41313" />
             </TouchableOpacity>
           </View>
         ))
@@ -283,7 +322,7 @@ const navigation = useNavigation();
                 {renderIcas()}
                 {/* Pagination controls */}
                 <View
-                  style={{ flexDirection: "row", justifyContent: "center" , marginTop: 10}}
+                  style={{ flexDirection: "row", justifyContent: "center", marginTop: 10 }}
                 >
                   <TouchableOpacity
                     style={styles.paginationButton}
@@ -400,7 +439,8 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    width: "100%"
   },
   modalHeader: {
     flexDirection: "row",

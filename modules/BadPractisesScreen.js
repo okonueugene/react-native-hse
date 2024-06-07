@@ -122,12 +122,28 @@ const BadPractices = () => {
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
   const [selectedBadPractice, setSelectedBadPractice] = useState(null);
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
+  const deleteBadPractice = async (id) => {
+    setLoading(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+
+      const response = await ApiManager.delete(`/delete-sor/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (response.status === 200) {
+        alert("Bad practice deleted successfully");
+        fetchBadPractices();
+      } else {
+        console.log("Error deleting bad practice");
+      }
+    } catch (error) {
+      console.log("Error deleting bad practice");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -202,7 +218,7 @@ const BadPractices = () => {
             </Text>
             <TouchableOpacity
               style={{
-                backgroundColor: "#007bff",
+                backgroundColor: "transparent",
                 padding: 4,
                 borderRadius: 5,
                 marginRight: 16,
@@ -212,7 +228,21 @@ const BadPractices = () => {
               }}
               onPress={() => handleViewBadPractice(badPractice)}
             >
-              <Text style={{ color: "#fff" }}>View</Text>
+              <Ionicons name="eye" size={14} color="blue" />
+            </TouchableOpacity>
+            <TouchableOpacity
+
+              style={{
+                backgroundColor: "transparent",
+                padding: 4,
+                borderRadius: 5,
+                justifyContent: "center",
+                alignItems: "center",
+                height: 30
+              }}
+              onPress={() => deleteBadPractice(badPractice.id)}
+            >
+              <Ionicons name="trash" size={14} color="red" />
             </TouchableOpacity>
           </View>
         ))
@@ -374,7 +404,8 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    width: "100%"
   },
   modalHeader: {
     flexDirection: "row",

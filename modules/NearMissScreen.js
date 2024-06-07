@@ -135,12 +135,29 @@ const NearMissScreen = () => {
   const [isViewNearMissModalOpen, setIsViewNearMissModalOpen] = useState(null);
   const [selectedNearMiss, setSelectedNearMiss] = useState(null);
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
+  const deleteNearMiss = async (id) => {
+    setLoading(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      const response = await ApiManager.delete(`/delete-incident/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+
+      });
+
+      if (response.status === 200) {
+        alert("Near Miss deleted successfully");
+        getNearMisses();
+      } else {
+        alert("Error deleting near miss");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Error deleting near miss");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -216,7 +233,7 @@ const NearMissScreen = () => {
             </Text>
             <TouchableOpacity
               style={{
-                backgroundColor: "#007bff",
+                backgroundColor: "transparent",
                 padding: 4,
                 borderRadius: 5,
                 marginRight: 16,
@@ -226,7 +243,21 @@ const NearMissScreen = () => {
               }}
               onPress={() => handleViewNearMiss(nearMiss)}
             >
-              <Text style={{ color: "#fff" }}>View</Text>
+              <Ionicons name="eye" size={14} color="blue" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "transparent",
+                padding: 4,
+                borderRadius: 5,
+                marginRight: 16,
+                justifyContent: "center",
+                alignItems: "center",
+                height: 30
+              }}
+              onPress={() => deleteNearMiss(nearMiss.id)}
+            >
+              <Ionicons name="trash" size={14} color="red" />
             </TouchableOpacity>
           </View>
         ))
@@ -396,7 +427,8 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    width: "100%"
   },
   modalHeader: {
     flexDirection: "row",

@@ -124,14 +124,37 @@ const OpenSorsScreen = () => {
 
   const navigation = useNavigation();
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
+  const deleteSor = async (sorId) => {
+    // Logic to delete SOR
+    setLoading(true);
+    try {
+      // Retrieve token from local storage
+      const token = await AsyncStorage.getItem("token");
+
+      // Fetch tasks for the current page
+      const response = await ApiManager.delete(`/sor/${sorId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      // Handle the response
+      if (response.status === 200) {
+        setLoading(false);
+        // Show success message
+        alert("SOR deleted successfully");
+        // Refresh the SORs
+        OpenSors();
+      } else {
+        // Handle error
+        console.error(response.data);
+      }
+    } catch (error) {
+      setLoading(false);
     }
+
   };
+        
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -228,7 +251,7 @@ const OpenSorsScreen = () => {
           </Text>
           <TouchableOpacity
             style={{
-              backgroundColor: "#007bff",
+              backgroundColor: "transparent",
               padding: 4,
               borderRadius: 5,
               marginRight: 16,
@@ -236,9 +259,22 @@ const OpenSorsScreen = () => {
               alignItems: "center",
               height: 30
             }}
-            onPress={() => handleViewSor(sor)} // Pass the SOR to the handler
+            onPress={() => handleViewSor(sor)} 
           >
-            <Text style={{ color: "#fff" }}>View</Text>
+            <Ionicons name="eye" size={14} color="#1520f2" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "transparent",
+              padding: 4,
+              borderRadius: 5,
+              justifyContent: "center",
+              alignItems: "center",
+              height: 30
+            }}
+            onPress={() => deleteSor(sor.id)} 
+          >
+            <Ionicons name="trash" size={14} color="#f21313" />
           </TouchableOpacity>
         </View>
       ));
@@ -401,7 +437,8 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    width:"100%"
   },
   modalHeader: {
     flexDirection: "row",

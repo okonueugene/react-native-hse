@@ -122,14 +122,31 @@ const GoodPractices = () => {
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
   const [selectedGoodPractice, setSelectedGoodPractice] = useState(null);
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
+
+  const deleteGoodPractice = async (id) => {
+    setLoading(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      const response = await ApiManager.delete(`/delete-sor/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (response.status === 200) {
+        alert("Good practice deleted successfully");
+        fetchGoodPractices();
+      } else {
+        console.log("Error deleting good practice");
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log("Error deleting good practice");
+      setLoading(false);
     }
   };
+
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -202,7 +219,7 @@ const GoodPractices = () => {
             </Text>
             <TouchableOpacity
               style={{
-                backgroundColor: "#007bff",
+                backgroundColor: "transparent",
                 padding: 4,
                 borderRadius: 5,
                 marginRight: 16,
@@ -212,7 +229,21 @@ const GoodPractices = () => {
               }}
               onPress={() => handleViewGoodPractice(goodPractice)}
             >
-              <Text style={{ color: "#fff" }}>View</Text>
+              <Ionicons name="eye" size={14} color="blue" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "transparent",
+                padding: 4,
+                borderRadius: 5,
+                marginRight: 16,
+                justifyContent: "center",
+                alignItems: "center",
+                height: 30
+              }}
+              onPress={() => deleteGoodPractice(goodPractice.id)}
+            >
+              <Ionicons name="trash" size={14} color="red" />
             </TouchableOpacity>
           </View>
         ))
@@ -374,7 +405,8 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    width: "100%"
   },
   modalHeader: {
     flexDirection: "row",

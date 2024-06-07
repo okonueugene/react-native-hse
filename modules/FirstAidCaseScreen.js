@@ -16,6 +16,7 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
+import { useNavigation } from "@react-navigation/native";
 
 const ViewFirstAidCaseModal = ({ firstaidcase, onClose, visible }) => {
   if (!visible || !firstaidcase) {
@@ -147,14 +148,32 @@ const FirstAidCaseScreen = () => {
   const [isViewFirstAidCaseModalOpen, setIsViewFirstAidCaseModalOpen] =
     useState(null);
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
+
+  const navigation = useNavigation();
+
+  const deleteFirstAidCase = async (id) => {
+    setLoading(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      const response = await ApiManager.delete(`/delete-incident/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+
+      });
+
+      if (response.status === 200) {
+        alert("First Aid Case deleted successfully");
+        getFirstAidCases();
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -233,7 +252,7 @@ const FirstAidCaseScreen = () => {
               </Text>
               <TouchableOpacity
                 style={{
-                  backgroundColor: "#007bff",
+                  backgroundColor: "transparent",
                   padding: 4,
                   borderRadius: 5,
                   marginRight: 16,
@@ -243,7 +262,21 @@ const FirstAidCaseScreen = () => {
                 }}
                 onPress={() => handleViewFirstAidCase(firstAidCase)}
               >
-                <Text style={{ color: "#fff" }}>View</Text>
+                <Ionicons name="eye" size={14} color="blue" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "transparent",
+                  padding: 4,
+                  borderRadius: 5,
+                  marginRight: 16,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: 30
+                }}
+                onPress={() => deleteFirstAidCase(firstAidCase.id)}
+              >
+                <Ionicons name="trash" size={14} color="red" />
               </TouchableOpacity>
             </View>
           ))}
@@ -410,7 +443,8 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    width: "100%"
   },
   modalHeader: {
     flexDirection: "row",

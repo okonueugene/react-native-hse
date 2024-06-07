@@ -32,7 +32,6 @@ const UploadImageModal = ({ visible, onClose, onRemoveImage }) => {
 
   const ensureDirExists = async () => {
     const dirInfo = await FileSystem.getInfoAsync(imgDir);
-    console.log("dirInfo", dirInfo);
     if (!dirInfo.exists) {
       await FileSystem.makeDirectoryAsync(imgDir, { intermediates: true });
     }
@@ -97,6 +96,7 @@ const UploadImageModal = ({ visible, onClose, onRemoveImage }) => {
 
   const renderItem = ({ item, index }) => {
     const filename = item.split("/").pop();
+    console.log(item);
 
     return (
       <View

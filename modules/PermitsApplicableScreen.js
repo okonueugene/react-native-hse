@@ -273,14 +273,6 @@ const PermitsApplicableScreen = () => {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
 
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
-    }
-  };
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -292,6 +284,36 @@ const PermitsApplicableScreen = () => {
   };
 
   const navigation = useNavigation();
+
+  const deletePermit = async (permitId) => {
+    setLoading(true);
+    try {
+      // Fetch token from async storage
+      const token = await AsyncStorage.getItem("token");
+
+      // Fetch permits
+      const response = await ApiManager.delete(`/delete-permit/${permitId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      // Handle the response
+      if (response.status === 200) {
+        alert("Permit deleted successfully");
+        setLoading(false);
+        // Refresh the permits
+        retrievePermits();
+      } else {
+        console.error(response.data);
+        setLoading(false);
+      }
+
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
 
 
   const retrievePermits = async () => {
@@ -379,7 +401,7 @@ const PermitsApplicableScreen = () => {
 
           <TouchableOpacity
             style={{
-              backgroundColor: "#007bff",
+              backgroundColor: "transparent",
               padding: 4,
               borderRadius: 5,
               marginRight: 16,
@@ -389,7 +411,20 @@ const PermitsApplicableScreen = () => {
             }}
             onPress={() => handleViewPermit(permit)}
           >
-            <Text style={{ color: "#fff" }}>View</Text>
+            <Ionicons name="eye" size={14} color="#2a19e8" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "transparent",
+              padding: 4,
+              borderRadius: 5,
+              justifyContent: "center",
+              alignItems: "center",
+              height: 30
+            }}
+            onPress={() => deletePermit(permit.id)}
+          >
+            <Ionicons name="trash" size={14} color="#f41313" />
           </TouchableOpacity>
         </View>
       ));

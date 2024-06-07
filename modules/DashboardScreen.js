@@ -25,9 +25,7 @@ const DashboardScreen = () => {
   const { dashboardStats } = state;
 
   useEffect(() => {
-    if (!dashboardStats) {
-      fetchDashboardStats();
-    }
+
     fetchDashboardStats();
 
   }, []);

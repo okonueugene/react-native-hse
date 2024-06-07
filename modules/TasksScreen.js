@@ -8,6 +8,7 @@ import {
   TextInput,
   Button,
   Dimensions,
+  Image,
   StyleSheet,
   DrawerLayoutAndroid
 } from "react-native";
@@ -17,6 +18,7 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import { useNavigation } from "@react-navigation/native";
+import config from "../config/config";
 
 const ViewTaskModal = ({ task, onClose, visible }) => {
   if (!visible || !task) {
@@ -123,8 +125,7 @@ const TasksScreen = () => {
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
   const [selectedBadPractice, setSelectedBadPractice] = useState(null);
 
-  const navigation = useNavigation();
-
+const navigation = useNavigation();
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -134,6 +135,8 @@ const TasksScreen = () => {
     setIsDrawerOpen(false);
     drawerRef.current.closeDrawer();
   };
+
+  
 
   useEffect(() => {
     // Fetch tasks when component mounts
@@ -156,7 +159,7 @@ const TasksScreen = () => {
       // Handle the response
       if (response.status === 200) {
         // Set the tasks
-        setTasks(response.data);
+        setTasks(response.data.data);
         // Set loading to false
         setIsLoading(false);
       } else {
@@ -165,19 +168,15 @@ const TasksScreen = () => {
       }
     } catch (error) {
       setIsLoading(false);
-      if (error.response && error.response.status === 401) {
+      console.error(error);
+
+      // Handle error
+
+      if (error.response.status === 401) {
         alert("You are not authorized to view this page try logging in again");
-
-        //remove token from async storage
-
-        await AsyncStorage.removeItem("token");
-
-        await AsyncStorage.removeItem("user");
-
-        //redirect to dashboard page
-
+        // Redirect to dashboard
         navigation.navigate("Dashboard");
-      }
+      } 
     }
   };
 
@@ -216,7 +215,7 @@ const TasksScreen = () => {
           </Text>
           <TouchableOpacity
             style={{
-              backgroundColor: "#007bff",
+              backgroundColor: "transparent",
               padding: 4,
               borderRadius: 5,
               marginRight: 16,
@@ -228,7 +227,19 @@ const TasksScreen = () => {
               handleViewTask(task);
             }}
           >
-            <Text style={{ color: "#fff" }}>View</Text>
+            <Ionicons name="eye" size={16} color="#2a19e8" />
+          </TouchableOpacity>
+          <TouchableOpacity 
+          style={{
+            backgroundColor: "transparent",
+            padding: 4,
+            borderRadius: 5,
+            justifyContent: "center",
+            alignItems: "center",
+            height: 30
+          }}
+          >
+            <Ionicons name="create" size={16} color="#e89519" />
           </TouchableOpacity>
         </View>
       ));
@@ -387,7 +398,8 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    width:"100%"
   },
   modalHeader: {
     flexDirection: "row",

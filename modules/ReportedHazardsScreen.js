@@ -123,14 +123,35 @@ const ReportedHazardsScreen = () => {
     setViewReportedHazardsModal(true);
   };
 
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-    if (!isDrawerOpen) {
-      drawerRef.current.openDrawer();
-    } else {
-      drawerRef.current.closeDrawer();
+  const deleteHazard = async (id) => {
+    setLoading(true);
+    try {
+      // Retrieve token from local storage
+      const token = await AsyncStorage.getItem("token");
+
+      // Delete the hazard from the API
+      const response = await ApiManager.delete(`/delete-sor/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+
+      });
+
+      // Handle the response
+      if (response.status === 200) {
+        // Fetch the hazards again
+        fetchHazards();
+      } else {
+        // Handle error
+        console.error(response.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
     }
   };
+
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -202,7 +223,7 @@ const ReportedHazardsScreen = () => {
           </Text>
           <TouchableOpacity
             style={{
-              backgroundColor: "#007bff",
+              backgroundColor: "transparent",
               padding: 4,
               borderRadius: 5,
               marginRight: 16,
@@ -212,7 +233,21 @@ const ReportedHazardsScreen = () => {
             }}
             onPress={() => handleViewReportedHazards(hazard)}
           >
-            <Text style={{ color: "#fff" }}>View</Text>
+            <Ionicons name="eye" size={24} color="blue" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "transparent",
+              padding: 4,
+              borderRadius: 5,
+              marginRight: 16,
+              justifyContent: "center",
+              alignItems: "center",
+              height: 30
+            }}
+            onPress={() => deleteHazard(hazard.id)}
+          >
+            <Ionicons name="trash" size={24} color="red" />
           </TouchableOpacity>
         </View>
       ));
@@ -372,7 +407,8 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 10
+    borderRadius: 10,
+    width: "100%"
   },
   modalHeader: {
     flexDirection: "row",
