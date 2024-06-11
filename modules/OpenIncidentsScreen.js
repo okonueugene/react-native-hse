@@ -19,6 +19,8 @@ import config from "../config/config";
 import { useNavigation } from "@react-navigation/native";
 
 
+
+
 const ViewIncidentModal = ({ incident, onClose, visible }) => {
   if (!visible || !incident) {
     return null;
@@ -138,7 +140,7 @@ const OpenIncidentsScreen = () => {
   const [isViewIncidentModalOpen, setIsViewIncidentModalOpen] = useState(false);
   const [selectedIncident, setSelectedIncident] = useState(null);
 
-const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
@@ -148,6 +150,32 @@ const navigation = useNavigation();
     setIsDrawerOpen(false);
     drawerRef.current.closeDrawer();
   };
+
+  const deleteIncident = async (incidentId) => {
+    setLoading(true);
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await ApiManager.delete(`/delete-incident/${incidentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (response.status === 200) {
+        alert("Incident deleted successfully");
+        fetchIncidents();
+      } else {
+        // Handle error
+        console.error(response.data.message);
+      }
+    } catch (error) {
+      // Handle error
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const fetchIncidents = async () => {
     try {
@@ -182,7 +210,8 @@ const navigation = useNavigation();
 
         //redirect to dashboard page
 
-        navigation.navigate("Dashboard");      }
+        navigation.navigate("Dashboard");
+      }
     }
   };
 
@@ -247,7 +276,7 @@ const navigation = useNavigation();
                 alignItems: "center",
                 height: 30
               }}
-              onPress={() => handleViewIncident(incident)}
+              onPress={() => deleteIncident(incident.id)}
             >
               <Ionicons name="trash" size={16} color="#f21313" />
             </TouchableOpacity>
