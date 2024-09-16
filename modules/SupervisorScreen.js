@@ -18,6 +18,7 @@ import Preloader from "../components/Preloader";
 import config from "../config/config";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
+import QuickAccess from "../components/QuickAcessFooter";
 
 
 const SupervisorDetailModal = ({ supervisor, isVisible, onClose }) => {
@@ -229,37 +230,44 @@ const SupervisorScreen = () => {
     try {
       // Fetch token from async storage
       const token = await AsyncStorage.getItem("token");
-
+  
       // Make a GET request to fetch supervisors
-      const response = await ApiManager.get("/supervisors", {
+      const response = await ApiManager.get("/supervisor", {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-
+  
       if (response.status === 200) {
-        setSupervisors(response.data.data);
+        // Extract the data array from the response
+        const supervisorsData = response.data.data.data;
+        
+        // Ensure supervisorsData is an array
+        if (Array.isArray(supervisorsData)) {
+          setSupervisors(supervisorsData);
+        } else {
+          console.error("Unexpected data format", supervisorsData);
+          setSupervisors([]);
+        }
       }
     } catch (error) {
       console.log(error);
       if (error.response && error.response.status === 401) {
         alert("You are not authorized to view this page try logging in again");
-
-        //remove token from async storage
-
+  
+        // Remove token from async storage
         await AsyncStorage.removeItem("token");
-
         await AsyncStorage.removeItem("user");
-
-        //redirect to dashboard page
-
+  
+        // Redirect to dashboard page
         navigation.navigate("Dashboard");
       }
     } finally {
       setIsLoading(false);
     }
-
   };
+  
+  
 
 const deleteSupervisor = async (id) => {
   try {
@@ -324,7 +332,7 @@ const deleteSupervisor = async (id) => {
   }
 
   const renderSupervisors = () => {
-    return supervisors && supervisors
+    return Array.isArray(supervisors) && supervisors
       .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
       .map((supervisor) => (
         <View
@@ -342,7 +350,7 @@ const deleteSupervisor = async (id) => {
           <Text style={[styles.column, { flex: 1, marginRight: 16 }]}>
             {supervisor.designation}
           </Text>
-
+  
           <TouchableOpacity
             style={{
               backgroundColor: "transparent",
@@ -356,7 +364,7 @@ const deleteSupervisor = async (id) => {
             onPress={() => handleSupervisorDetail(supervisor)}
           >
             <Ionicons name="eye" size={12} color="blue" />
-
+  
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -374,6 +382,7 @@ const deleteSupervisor = async (id) => {
         </View>
       ));
   };
+  
 
   return (
     <DrawerLayoutAndroid
@@ -460,10 +469,8 @@ const deleteSupervisor = async (id) => {
             )}
           </View>
           {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+          <View >
+            <QuickAccess />
           </View>
         </ScrollView>
       </View>
