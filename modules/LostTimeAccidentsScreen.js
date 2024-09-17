@@ -16,6 +16,7 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
+import QuickAccess from "../components/QuickAcessFooter";
 
 
 
@@ -147,7 +148,7 @@ const LostTimeAccidentsScreen = () => {
     try {
       const token = await AsyncStorage.getItem("token");
 
-      const response = await ApiManager.delete(`/delete-incident/${id}`, {
+      const response = await ApiManager.delete(`/incidents/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -174,7 +175,7 @@ const LostTimeAccidentsScreen = () => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      const response = await ApiManager.get("/lost-time-accident", {
+      const response = await ApiManager.get("/incidents?type=4", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -337,11 +338,10 @@ const LostTimeAccidentsScreen = () => {
               </>
             )}
           </View>
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+                      {/* Footer */}
+                      <View>
+          <QuickAccess />
+
           </View>
         </ScrollView>
       </View>

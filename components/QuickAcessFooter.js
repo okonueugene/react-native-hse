@@ -37,15 +37,15 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: '#007bff',
         height: 60,
+        borderRadius: 5,
       },
       quickAccessButton: {
         flex: 1,
         alignItems: 'center',
         padding: 8,
         backgroundColor: '#007bff',
-        borderRadius: 5,
         marginHorizontal: 5,
-        justifyContent: 'center', // Aligns icon and text vertically
+        justifyContent: 'center',
       },
       quickAccessText: {
         color: '#fff',

@@ -16,6 +16,7 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
+import QuickAccess from "../components/QuickAcessFooter";
 
 const ViewBadPracticeModal = ({ badPractice, onClose, visible }) => {
   if (!visible || !badPractice) {
@@ -159,7 +160,7 @@ const BadPractices = () => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      const response = await ApiManager.get("/bad-practices", {
+      const response = await ApiManager.get("/sors?sors_type=1", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -322,11 +323,10 @@ const BadPractices = () => {
               </>
             )}
           </View>
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+         {/* Footer */}
+         <View>
+          <QuickAccess />
+
           </View>
         </ScrollView>
       </View>

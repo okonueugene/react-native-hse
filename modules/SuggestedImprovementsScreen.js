@@ -16,6 +16,7 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
+import QuickAccess from "../components/QuickAcessFooter";
 
 const ViewImprovementModal = ({ improvement, visible, onClose }) => {
   if (!visible || !improvement) {
@@ -138,7 +139,7 @@ const SuggestedImprovementsScreen = () => {
       const token = await AsyncStorage.getItem("token");
 
       // Send a delete request to the API
-      const response = await ApiManager.delete(`/delete-sor/${id}`, {
+      const response = await ApiManager.delete(`/sors/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -175,7 +176,7 @@ const SuggestedImprovementsScreen = () => {
       // Retrieve token from local storage
       const token = await AsyncStorage.getItem("token");
       // Fetch improvements from the API
-      const response = await ApiManager.get("/improvements", {
+      const response = await ApiManager.get("/sors?sors_type=4", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -332,11 +333,10 @@ const SuggestedImprovementsScreen = () => {
               </>
             )}
           </View>
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+        {/* Footer */}
+        <View>
+          <QuickAccess />
+
           </View>
         </ScrollView>
       </View>

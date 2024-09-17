@@ -18,6 +18,7 @@ import Preloader from "../components/Preloader";
 import config from "../config/config";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
+import QuickAccess from "../components/QuickAcessFooter";
 
 
 const AddPermitModal = ({ isVisible, onClose }) => {
@@ -58,7 +59,7 @@ const AddPermitModal = ({ isVisible, onClose }) => {
       const token = await AsyncStorage.getItem("token");
 
       // Fetch permits
-      const response = await fetch(`${config.apiBaseUrl}/add-permit`, {
+      const response = await fetch(`${config.apiBaseUrl}/permits`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`
@@ -292,7 +293,7 @@ const PermitsApplicableScreen = () => {
       const token = await AsyncStorage.getItem("token");
 
       // Fetch permits
-      const response = await ApiManager.delete(`/delete-permit/${permitId}`, {
+      const response = await ApiManager.delete(`/permits/${permitId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -513,11 +514,9 @@ const PermitsApplicableScreen = () => {
               </>
             )}
           </View>
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+               {/* Footer */}
+               <View>
+          <QuickAccess />
           </View>
         </ScrollView>
       </View>

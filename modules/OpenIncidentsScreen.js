@@ -17,6 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
 import { useNavigation } from "@react-navigation/native";
+import QuickAccess from "../components/QuickAcessFooter";
 
 
 
@@ -155,7 +156,7 @@ const OpenIncidentsScreen = () => {
     setLoading(true);
     try {
       const token = await AsyncStorage.getItem("token");
-      const response = await ApiManager.delete(`/delete-incident/${incidentId}`, {
+      const response = await ApiManager.delete(`/incidents/${incidentId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -181,7 +182,7 @@ const OpenIncidentsScreen = () => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      const response = await ApiManager.get("/open-incidents", {
+      const response = await ApiManager.get("/incidents?status=no", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -363,10 +364,10 @@ const OpenIncidentsScreen = () => {
             )}
           </View>
           {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+                  {/* Footer */}
+                  <View>
+          <QuickAccess />
+
           </View>
         </ScrollView>
       </View>

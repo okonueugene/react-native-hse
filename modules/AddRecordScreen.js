@@ -22,8 +22,7 @@ import { FlatList } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import MenuScreen from "../components/MenuScreen";
 import config from "../config/config";
-import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
-
+import QuickAccess from "../components/QuickAcessFooter";
 
 let images = [];
 
@@ -203,7 +202,7 @@ const AddRecordScreen = () => {
           }
         });
 
-        setSorTypes(data);
+        setSorTypes(data.data);
       } catch (error) {
         console.error("Error fetching SOR types:", error);
       }
@@ -501,12 +500,10 @@ const AddRecordScreen = () => {
                 submit={onSubmit}
               />
             </View>
-            {/* Footer */}
-            <View style={styles.footer}>
-              <Text style={styles.footerText}>
-                © 2024 OptiSafe Ltd. All rights reserved.
-              </Text>
-            </View>
+                         {/* Footer */}
+  <View >
+            <QuickAccess />
+          </View>
           </ScrollView>
         </View>
       </DrawerLayoutAndroid>

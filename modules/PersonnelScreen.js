@@ -18,6 +18,7 @@ import Preloader from "../components/Preloader";
 import config from "../config/config";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
+import QuickAccess from "../components/QuickAcessFooter";
 
 const PersonnelDetailModal = ({ visible, onClose, personnel }) => {
   if (!personnel || !visible) {
@@ -272,7 +273,7 @@ const PersonnelScreen = () => {
       });
 
       if (response.status === 200) {
-        setPersonnelData(response.data.data);
+        setPersonnelData(response.data.data.data);
         console.log(response.data.data);
       } else {
         alert("Error fetching personnel data");
@@ -451,11 +452,9 @@ const PersonnelScreen = () => {
                 /></>
             )}
           </View>
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+  {/* Footer */}
+  <View >
+            <QuickAccess />
           </View>
         </ScrollView>
       </View>

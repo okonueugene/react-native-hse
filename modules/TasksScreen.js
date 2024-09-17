@@ -315,12 +315,8 @@ const navigation = useNavigation();
               </>
             )}
           </View>
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
-          </View>
+               {/* Footer */}                                                                                                                                                                                                                                                                                                                                       
+
         </ScrollView>
       </View>
     </DrawerLayoutAndroid>

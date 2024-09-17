@@ -17,6 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
 import { useNavigation } from "@react-navigation/native";
+import QuickAccess from "../components/QuickAcessFooter";
 
 const ViewICAModal = ({ ica, onClose, visible }) => {
   if (!visible || !ica) {
@@ -59,7 +60,7 @@ const ViewICAModal = ({ ica, onClose, visible }) => {
                 multiline={true}
               />
               <Text style={styles.label}>Steps Taken:</Text>
-              {Object.keys(ica.steps_taken).length > 0 ? (
+              {ica.steps_taken && Object.keys(ica.steps_taken).length > 0 ? (
                 Object.keys(ica.steps_taken).map((key, index) => (
                   <TextInput
                     key={index}
@@ -77,6 +78,7 @@ const ViewICAModal = ({ ica, onClose, visible }) => {
                   multiline={true}
                 />
               )}
+
               <Text style={styles.label}>Date:</Text>
               <TextInput
                 style={styles.textInput}
@@ -87,7 +89,7 @@ const ViewICAModal = ({ ica, onClose, visible }) => {
               <TextInput
                 style={styles.textInput}
                 value={
-                  ica.status == "open"
+                  ica.status === "open"
                     ? "Open"
                     : "Closed" || "No status data available"
                 }
@@ -103,9 +105,7 @@ const ViewICAModal = ({ ica, onClose, visible }) => {
                         style={styles.mediaImage}
                         resizeMode="contain"
                       />
-                      <Text style={styles.mediaText}>
-                        Media {item.file_name}
-                      </Text>
+                      <Text style={styles.mediaText}>{item.file_name}</Text>
                     </View>
                   ))}
                 </View>
@@ -149,7 +149,7 @@ const ViewIcaScreen = () => {
     try {
       const token = await AsyncStorage.getItem("token");
       // Send a DELETE request to the API
-      const response = await ApiManager.delete(`/delete-ica/${id}`, {
+      const response = await ApiManager.delete(`/icas/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -160,6 +160,7 @@ const ViewIcaScreen = () => {
         alert("ICA deleted successfully");
         // Fetch the ICAs again
         fetchICAs();
+        s;
       }
 
       setLoading(false);
@@ -187,7 +188,6 @@ const ViewIcaScreen = () => {
       console.log(err);
       setLoading(false);
       if (err.response.status === 401) {
-
         alert("You are not authorized to view this page try logging in again");
 
         //remove token from async storage
@@ -199,9 +199,7 @@ const ViewIcaScreen = () => {
         //redirect to dashboard page
 
         navigation.navigate("Dashboard");
-
       }
-
     }
   };
 
@@ -322,7 +320,11 @@ const ViewIcaScreen = () => {
                 {renderIcas()}
                 {/* Pagination controls */}
                 <View
-                  style={{ flexDirection: "row", justifyContent: "center", marginTop: 10 }}
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    marginTop: 10
+                  }}
                 >
                   <TouchableOpacity
                     style={styles.paginationButton}
@@ -351,10 +353,8 @@ const ViewIcaScreen = () => {
             )}
           </View>
           {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+          <View>
+            <QuickAccess />
           </View>
         </ScrollView>
       </View>
@@ -404,12 +404,12 @@ const styles = StyleSheet.create({
     size: 16,
     backgroundColor: "#007bff",
     borderRadius: 5,
-    justifyContent: "center",
+    justifyContent: "center"
   },
   pageIndicator: {
     padding: 8,
     marginHorizontal: 5,
-    textAlign: "center",
+    textAlign: "center"
   },
   cardFooter: {
     fontSize: 14,

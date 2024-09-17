@@ -17,6 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
 import { useNavigation } from "@react-navigation/native";
+import QuickAccess from "../components/QuickAcessFooter";
 
 
 const ViewSorModal = ({ visible, sor, onClose }) => {
@@ -173,7 +174,7 @@ const OpenSorsScreen = () => {
       const token = await AsyncStorage.getItem("token");
 
       // Fetch tasks for the current page
-      const response = await ApiManager.get("/open-sor", {
+      const response = await ApiManager.get("/sors?status=0", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -354,11 +355,9 @@ const OpenSorsScreen = () => {
               </>
             )}
           </View>
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+                            {/* Footer */}
+  <View >
+            <QuickAccess />
           </View>
         </ScrollView>
       </View>

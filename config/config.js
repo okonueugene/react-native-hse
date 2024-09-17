@@ -1,12 +1,12 @@
 
 const config = {
-  apiBaseUrl: "https://hse.optitech.co.ke/api/v1",
+  apiBaseUrl: "https://staging.qhseapi.optitech.co.ke/api/v1/",
   headers: {
     "Content-Type": "application/json"
   },
   responseType: "json",
   withCredentials: true,
-  media_url: "https://hse.optitech.co.ke/",
+  media_url: "https://staging.qhse.optitech.co.ke/public",
 };
 
 export default config;

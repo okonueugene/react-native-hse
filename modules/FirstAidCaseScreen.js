@@ -17,6 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
 import { useNavigation } from "@react-navigation/native";
+import QuickAccess from "../components/QuickAcessFooter";
 
 const ViewFirstAidCaseModal = ({ firstaidcase, onClose, visible }) => {
   if (!visible || !firstaidcase) {
@@ -156,7 +157,7 @@ const FirstAidCaseScreen = () => {
     try {
       const token = await AsyncStorage.getItem("token");
 
-      const response = await ApiManager.delete(`/delete-incident/${id}`, {
+      const response = await ApiManager.delete(`/incidents/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -189,7 +190,7 @@ const FirstAidCaseScreen = () => {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
 
-      const response = await ApiManager.get("/first-aid-case", {
+      const response = await ApiManager.get("/incidents?type=2", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -356,11 +357,10 @@ const FirstAidCaseScreen = () => {
               </>
             )}
           </View>
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+                     {/* Footer */}
+                     <View>
+          <QuickAccess />
+
           </View>
         </ScrollView>
       </View>

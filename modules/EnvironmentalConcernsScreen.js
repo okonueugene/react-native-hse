@@ -16,6 +16,7 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import { useNavigation } from "@react-navigation/native";
+import QuickAccess from "../components/QuickAcessFooter";
 
 
 const ViewConcernModal = ({ concern, onClose, visible }) => {
@@ -368,11 +369,10 @@ const EnvironmentalConcernsScreen = () => {
               </>
             )}
           </View>
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+                      {/* Footer */}
+                      <View>
+          <QuickAccess />
+
           </View>
         </ScrollView>
       </View>

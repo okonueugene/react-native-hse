@@ -16,6 +16,7 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
+import QuickAccess from "../components/QuickAcessFooter";
 
 const ViewReportedHazardsModal = ({ visible, hazard, onClose }) => {
   if (!visible || !hazard) {
@@ -130,7 +131,7 @@ const ReportedHazardsScreen = () => {
       const token = await AsyncStorage.getItem("token");
 
       // Delete the hazard from the API
-      const response = await ApiManager.delete(`/delete-sor/${id}`, {
+      const response = await ApiManager.delete(`/sors/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -168,7 +169,7 @@ const ReportedHazardsScreen = () => {
       // Retrieve token from local storage
       const token = await AsyncStorage.getItem("token");
       // Fetch hazards from the API
-      const response = await ApiManager.get("/reported-hazards", {
+      const response = await ApiManager.get("/sors?sors_type=3", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -326,10 +327,9 @@ const ReportedHazardsScreen = () => {
             )}
           </View>
           {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+          <View>
+          <QuickAccess />
+
           </View>
         </ScrollView>
       </View>

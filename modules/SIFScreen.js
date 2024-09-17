@@ -16,6 +16,7 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
+import QuickAccess from "../components/QuickAcessFooter";
 
 const ViewSIFCaseModal = ({ sif, onClose, visible }) => {
   if (!visible || !sif) {
@@ -149,7 +150,7 @@ const SIFCaseScreen = () => {
     try {
       const token = await AsyncStorage.getItem("token");
 
-      const response = await ApiManager.delete(`/delete-incident/${id}`, {
+      const response = await ApiManager.delete(`/incidents/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -183,7 +184,7 @@ const SIFCaseScreen = () => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      const response = await ApiManager.get("/sif", {
+      const response = await ApiManager.get("/incidents?type=5", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -342,11 +343,10 @@ const SIFCaseScreen = () => {
               </>
             )}
           </View>
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+               {/* Footer */}
+               <View>
+          <QuickAccess />
+
           </View>
         </ScrollView>
       </View>

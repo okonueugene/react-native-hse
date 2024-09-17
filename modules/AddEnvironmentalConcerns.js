@@ -23,6 +23,7 @@ import { Ionicons } from "@expo/vector-icons";
 import MenuScreen from "../components/MenuScreen";
 import config from "../config/config";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
+import QuickAccess from "../components/QuickAcessFooter";
 
 
 const AddCheckListModal = ({ isVisible, onClose }) => {
@@ -1047,12 +1048,11 @@ const AddEnvironmentalConcerns = () => {
             <Text style={{ color: "white" }}>Add Policy Checklist</Text>
           </TouchableOpacity>
         </View>
-        {/* Footer */}
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            © 2024 OptiSafe Ltd. All rights reserved.
-          </Text>
-        </View>
+                       {/* Footer */}
+                       <View>
+          <QuickAccess />
+
+          </View>
       </ScrollView>
 
       {/* Free Form Modal */}

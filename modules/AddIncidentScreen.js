@@ -23,6 +23,7 @@ import { Ionicons } from "@expo/vector-icons";
 import config from "../config/config";
 import MenuScreen from "../components/MenuScreen";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
+import QuickAccess from "../components/QuickAcessFooter";
 
 
 let images = [];
@@ -176,6 +177,13 @@ const AddIncidentScreen = () => {
 
   const navigationView = () => <MenuScreen closeDrawer={closeDrawer} />;
 
+  const capitalize = (string) => {
+    const words = string.split("_");
+    const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+    return capitalizedWords.join(" ");
+  }
+  
+
   const fetchIncidentTypes = async () => {
     try {
       // Retrieve token from local storage
@@ -188,22 +196,16 @@ const AddIncidentScreen = () => {
         }
       });
 
-      console.log("Incident types:", data);
+      console.log("Incident types:", data.data);
 
-      // Process incident types
-      const processedNames = Object.fromEntries(
-        Object.entries(data).map(([key, value]) => {
-          let processedValue = value.replace(/_/g, " "); // Replace underscores with spaces
-          processedValue = processedValue.replace(/\b\w/g, (char) =>
-            char.toUpperCase()
-          ); // Capitalize each word
-          return [key, processedValue];
-        })
-      );
+      const types = data.data.reduce((acc, type) => {
+        acc[type.id] = capitalize(type.incident_type);
+        return acc;
+      }, {});
 
-      setIncidentTypes(processedNames);
+      setIncidentTypes(types);
     } catch (error) {
-      console.error("Error fetching incident types:", error);
+      console.error("Error fetching incident types:", error.response);
     }
   };
 
@@ -456,12 +458,12 @@ const AddIncidentScreen = () => {
                 />
               </View>
             </View>
-            {/* Footer */}
-            <View style={styles.footer}>
-              <Text style={styles.footerText}>
-                © 2024 OptiSafe Ltd. All rights reserved.
-              </Text>
-            </View>
+                     {/* Footer */}
+          <View>
+          <QuickAccess />
+
+          </View>
+        
           </ScrollView>
         </View>
       </DrawerLayoutAndroid>

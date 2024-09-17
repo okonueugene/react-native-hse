@@ -18,6 +18,7 @@ import Preloader from "../components/Preloader";
 import config from "../config/config";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
+import QuickAccess from "../components/QuickAcessFooter";
 
 
 const AddFirstResponderModal = ({ isVisible, onClose, retrieveFirstResponders }) => {
@@ -299,7 +300,7 @@ const FirstResponderScreen = () => {
             console.log(response.status);
             // Handle the response
             if (response.status === 200) {
-                setFirstResponders(response.data.data);
+                setFirstResponders(response.data.data.data);
                 setLoading(false);
 
             }
@@ -483,11 +484,9 @@ const FirstResponderScreen = () => {
                         )}
                     </View>
                     {/* Footer */}
-                    <View style={styles.footer}>
-                        <Text style={styles.footerText}>
-                            © 2024 OptiSafe Ltd. All rights reserved.
-                        </Text>
-                    </View>
+  <View >
+            <QuickAccess />
+          </View>
                 </ScrollView>
             </View>
         </DrawerLayoutAndroid>

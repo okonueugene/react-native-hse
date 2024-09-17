@@ -16,6 +16,7 @@ import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preloader from "../components/Preloader";
 import config from "../config/config";
+import QuickAccess from "../components/QuickAcessFooter";
 
 const ViewGoodPracticeModal = ({ goodPractice, onClose, visible }) => {
   if (!visible || !goodPractice) {
@@ -160,7 +161,7 @@ const GoodPractices = () => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      const response = await ApiManager.get("/good-practices", {
+      const response = await ApiManager.get("/sors?sors_type=2", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -323,11 +324,10 @@ const GoodPractices = () => {
               </>
             )}
           </View>
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              © 2024 OptiSafe Ltd. All rights reserved.
-            </Text>
+      {/* Footer */}
+      <View>
+          <QuickAccess />
+
           </View>
         </ScrollView>
       </View>
