@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import Preloader from "../components/Preloader";
 import { MainContext } from "../storage/MainContext";
 import { Ionicons } from "@expo/vector-icons";
+import QuickAccess from "../components/QuickAcessFooter";
 
 const DashboardScreen = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -98,7 +99,8 @@ const DashboardScreen = () => {
     try {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
-      console.log(token);
+      const user = await AsyncStorage.getItem("user");
+      console.log(token,user);
 
       const response = await ApiManager.get("/dashboard-stats", {
         headers: {
@@ -257,20 +259,10 @@ const DashboardScreen = () => {
               </View>
             </View>
           )}
-          <View style={styles.quickAccess}>
-      <TouchableOpacity style={styles.quickAccessButton} onPress={() => navigateToPage("Dashboard")}>
-        <Ionicons name="home" size={24} color="#fff" />
-        <Text style={styles.quickAccessText}>Home</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.quickAccessButton} onPress={() => navigateToPage("Dashboard")}>
-        <Ionicons name="apps" size={24} color="#fff" />
-        <Text style={styles.quickAccessText}>Quick Access</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.quickAccessButton} onPress={() => navigateToPage("Dashboard")}>
-        <Ionicons name="person" size={24} color="#fff" />
-        <Text style={styles.quickAccessText}>Profile</Text>
-      </TouchableOpacity>
-    </View>
+     {/* Footer */}
+     <View >
+            <QuickAccess />
+          </View>
         </ScrollView>
       </DrawerLayoutAndroid>
     </View>

@@ -130,7 +130,7 @@ const EnvironmentalConcernsScreen = () => {
       const token = await AsyncStorage.getItem("token");
 
       // Fetch tasks for the current page
-      const response = await ApiManager.delete(`/delete-environmental-policy/${id}`, {
+      const response = await ApiManager.delete(`/environmental-policy/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -189,12 +189,13 @@ const EnvironmentalConcernsScreen = () => {
       // Handle the response
       if (response.status === 200) {
         // Set the open SORs
-        setConcerns(response.data);
+        setConcerns(response.data.data);
+        console.log(response.data);
         // Set loading to false
         setLoading(false);
       } else {
         // Handle error
-        console.error(response.data);
+        console.error(response.data.data);
       }
     } catch (error) {
       setLoading(false);

@@ -97,11 +97,12 @@ const AddSupervisorModal = ({ isVisible, onClose, retrieveSupervisors }) => {
       return;
     }
 
-    //prepare the data
-    const formData = new FormData();
-
-    formData.append("name", name);
-    formData.append("designation", designation);
+  // Prepare data as JSON object
+  const formData = {
+    name,
+    designation
+  };
+    console.log(formData);
 
     onsubmit(formData);
 
@@ -114,26 +115,20 @@ const AddSupervisorModal = ({ isVisible, onClose, retrieveSupervisors }) => {
       const token = await AsyncStorage.getItem("token");
 
       // Make a POST request to add supervisor
-      const response = await fetch(`${config.apiBaseUrl}/add-supervisor`, {
-        method: "POST",
+      const response = await ApiManager.post("/supervisor", formData, {
         headers: {
           Authorization: `Bearer ${token}`
-        },
-        body: formData
+        }
       });
 
       if (response.status === 200) {
         alert("Supervisor added successfully");
-        setName("");
-        setDesignation("");
-        setIsLoading(false);
-        onClose();
-
         retrieveSupervisors();
+        onClose();
       }
     }
     catch (error) {
-      console.log(error);
+      console.log(error.response.message);
       alert("Error adding supervisor");
     }
     finally {
@@ -277,7 +272,7 @@ const deleteSupervisor = async (id) => {
     // url = "/delete-supervisor/{id}";
 
     // Make a DELETE request to delete supervisor
-    const response = await ApiManager.delete(`/delete-supervisor/${id}`, {
+    const response = await ApiManager.delete(`/supervisor/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

@@ -43,9 +43,7 @@ const PersonnelDetailModal = ({ visible, onClose, personnel }) => {
               </TouchableOpacity>
             </View>
             <View style={styles.modalBody}>
-              <Text style={styles.label}>
-                Designation
-              </Text>
+              <Text style={styles.label}>Designation</Text>
               <TextInput
                 style={styles.textInput}
                 value={personnel.designation}
@@ -63,12 +61,7 @@ const PersonnelDetailModal = ({ visible, onClose, personnel }) => {
                 value={personnel.date}
                 editable={false}
               />
-              <Text style={styles.label}>Added By</Text>
-              <TextInput
-                style={styles.textInput}
-                value={personnel.user.name}
-                editable={false}
-              />
+
             </View>
             <View style={styles.modalFooter}>
               <TouchableOpacity style={styles.closeButton} onPress={onClose}>
@@ -81,7 +74,6 @@ const PersonnelDetailModal = ({ visible, onClose, personnel }) => {
     </Modal>
   );
 };
-
 
 const AddPersonnelModal = ({ visible, onClose, fetchPersonnelData }) => {
   if (!visible) {
@@ -99,9 +91,10 @@ const AddPersonnelModal = ({ visible, onClose, fetchPersonnelData }) => {
     }
 
     //prepare data
-    const formData = new FormData();
-    formData.append("designation", designation);
-    formData.append("number", number);
+    const formData = {
+      designation,
+      number
+    };
 
     onSubmit(formData);
   };
@@ -113,33 +106,27 @@ const AddPersonnelModal = ({ visible, onClose, fetchPersonnelData }) => {
       const token = await AsyncStorage.getItem("token");
 
       // Post data to the server
-      const response = await fetch(`${config.apiBaseUrl}/add-personell`, {
-        method: "POST",
+      const response = await ApiManager.post("/personell", formData, {
         headers: {
           Authorization: `Bearer ${token}`
-        },
-        body: formData
+        }
       });
 
       if (response.status === 200) {
         alert("Personnel added successfully");
-        setDesignation("");
-        setNumber("");
+        // Fetch personnel data
         fetchPersonnelData();
-
         // Close the modal
         onClose();
       } else {
         alert("Error adding personnel");
-
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.response ? error.response.data : error.message);
       alert("Error adding personnel");
     } finally {
       setLoading(false);
     }
-
   };
 
   return (
@@ -168,7 +155,10 @@ const AddPersonnelModal = ({ visible, onClose, fetchPersonnelData }) => {
                   borderRadius: 4,
                   padding: 8,
                   marginBottom: 15
-                }} value={designation} onChangeText={setDesignation} />
+                }}
+                value={designation}
+                onChangeText={setDesignation}
+              />
               <Text style={styles.label}>Number of Personnel</Text>
               <TextInput
                 style={{
@@ -177,14 +167,25 @@ const AddPersonnelModal = ({ visible, onClose, fetchPersonnelData }) => {
                   borderRadius: 4,
                   padding: 8,
                   marginBottom: 15
-                }} value={number} onChangeText={setNumber} />
+                }}
+                value={number}
+                onChangeText={setNumber}
+              />
             </View>
 
             <View style={styles.modalFooter}>
               <TouchableOpacity style={styles.closeButton} onPress={onClose}>
                 <Text>Close</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ marginLeft: 10, padding: 5, borderRadius: 5, backgroundColor: "#007bff" }} onPress={handleAddPersonnel}>
+              <TouchableOpacity
+                style={{
+                  marginLeft: 10,
+                  padding: 5,
+                  borderRadius: 5,
+                  backgroundColor: "#007bff"
+                }}
+                onPress={handleAddPersonnel}
+              >
                 <Text>Add Personnel</Text>
               </TouchableOpacity>
             </View>
@@ -209,7 +210,6 @@ const AddPersonnelModal = ({ visible, onClose, fetchPersonnelData }) => {
   );
 };
 
-
 const PersonnelScreen = () => {
   const [personnelData, setPersonnelData] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -218,7 +218,8 @@ const PersonnelScreen = () => {
   const [itemsPerPage] = useState(8);
   const [selectedPersonell, setSelectedPersonell] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [showPersonnelDetailModal, setShowPersonnelDetailModal] = useState(false);
+  const [showPersonnelDetailModal, setShowPersonnelDetailModal] =
+    useState(false);
   const [showAddPersonnelModal, setShowAddPersonnelModal] = useState(false);
 
   const navigation = useNavigation();
@@ -228,11 +229,10 @@ const PersonnelScreen = () => {
   }, []);
 
   const deletePersonnel = async (id) => {
-
     try {
       const token = await AsyncStorage.getItem("token");
 
-      const response = await ApiManager.delete(`/delete-personell/${id}`, {
+      const response = await ApiManager.delete(`/personell/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -250,7 +250,6 @@ const PersonnelScreen = () => {
     }
   };
 
-
   const handleOutsideTouch = () => {
     closeDrawer(); // Close the drawer when touched outside
   };
@@ -259,7 +258,6 @@ const PersonnelScreen = () => {
     setIsDrawerOpen(false);
     drawerRef.current.closeDrawer();
   };
-
 
   const fetchPersonnelData = async () => {
     setLoading(true);
@@ -287,22 +285,17 @@ const PersonnelScreen = () => {
         await AsyncStorage.removeItem("user");
         //redirect to dashboard page
         navigation.navigate("Dashboard");
-      }
-      else {
+      } else {
         alert("Error fetching personnel data");
       }
     } finally {
       setLoading(false);
     }
-  }
-
-
+  };
 
   const navigationView = () => <MenuScreen closeDrawer={closeDrawer} />;
 
-
   const totalPages = Math.ceil(personnelData.length / itemsPerPage);
-
 
   const handleNextPage = () => {
     setCurrentPage(currentPage + 1);
@@ -391,7 +384,10 @@ const PersonnelScreen = () => {
           </TouchableOpacity> */}
           {/* Header */}
           <Text style={styles.title}>Personnel List</Text>
-          <TouchableOpacity style={styles.addButton} onPress={handleAddPersonnel}>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={handleAddPersonnel}
+          >
             <Ionicons name="add" size={24} color="#fff" />
           </TouchableOpacity>
           <View style={{ flex: 1, padding: 10 }}>
@@ -411,7 +407,9 @@ const PersonnelScreen = () => {
                     borderBottomColor: "#ccc"
                   }}
                 >
-                  <Text style={[styles.heading, styles.column]}>Designation</Text>
+                  <Text style={[styles.heading, styles.column]}>
+                    Designation
+                  </Text>
                   <Text style={[styles.heading, styles.column]}>Number</Text>
                   <Text style={[styles.heading, styles.column]}>Actions</Text>
                 </View>
@@ -449,11 +447,12 @@ const PersonnelScreen = () => {
                   visible={showPersonnelDetailModal}
                   onClose={() => setShowPersonnelDetailModal(false)}
                   personnel={selectedPersonell}
-                /></>
+                />
+              </>
             )}
           </View>
-  {/* Footer */}
-  <View >
+          {/* Footer */}
+          <View>
             <QuickAccess />
           </View>
         </ScrollView>
@@ -461,7 +460,6 @@ const PersonnelScreen = () => {
     </DrawerLayoutAndroid>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -533,7 +531,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    width: "100%",
+    width: "100%"
   },
   modalContent: {
     backgroundColor: "#fff",
@@ -587,7 +585,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end"
   }
-
 });
 
 export default PersonnelScreen;
