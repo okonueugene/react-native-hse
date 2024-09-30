@@ -14,12 +14,12 @@ import {
   Alert
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import * as ImagePicker from "expo-image-picker";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as FileSystem from "expo-file-system";
+import RNFS from "react-native-fs";
 import { FlatList } from "react-native-gesture-handler";
-import { Ionicons } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/Ionicons";
 import MenuScreen from "../components/MenuScreen";
 import config from "../config/config";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
@@ -679,7 +679,10 @@ const AddCheckListModal = ({ isVisible, onClose }) => {
                   borderWidth: 1,
                   borderColor: "#ccc",
                   padding: 10,
-                  marginBottom: 10
+                  marginBottom: 10,
+                  height: 100,
+                  placeholderText: "Enter Comments",
+                  placeholderTextColor: "#ccc"
                 }}
                 multiline
                 numberOfLines={4}
@@ -705,6 +708,7 @@ const AddCheckListModal = ({ isVisible, onClose }) => {
                       padding: 8
                     }}
                     placeholder="Enter Action"
+                    placeholderTextColor={"#ccc"}
                     value={actionValue}
                     onChangeText={(text) => updateAction(actionNumber, text)}
                   />
@@ -716,7 +720,7 @@ const AddCheckListModal = ({ isVisible, onClose }) => {
                     }}
                     onPress={() => removeAction(actionNumber)}
                   >
-                    <Ionicons name="trash" size={24} color="red" />
+                    <Icon name="trash" size={24} color="red" />
                   </TouchableOpacity>
                 </View>
               ))}
@@ -729,7 +733,7 @@ const AddCheckListModal = ({ isVisible, onClose }) => {
                 }}
                 onPress={addAction}
               >
-                <Ionicons name="add" size={24} color="white" />
+                <Icon name="add" size={24} color="white" />
               </TouchableOpacity>
               <Text style={{ marginBottom: 10 }}>Project/Site Manager:</Text>
               <TextInput
@@ -932,6 +936,7 @@ const AddFreeFormModal = ({ isVisible, onClose }) => {
                     padding: 8
                   }}
                   placeholder="Enter Action"
+                  placeholderTextColor={"#ccc"}
                   value={actionValue}
                   onChangeText={(text) => updateAction(actionNumber, text)}
                 />
@@ -943,7 +948,7 @@ const AddFreeFormModal = ({ isVisible, onClose }) => {
                   }}
                   onPress={() => removeAction(actionNumber)}
                 >
-                  <Ionicons name="trash" size={24} color="red" />
+                  <Icon name="trash" size={24} color="red" />
                 </TouchableOpacity>
               </View>
             ))}
@@ -956,7 +961,7 @@ const AddFreeFormModal = ({ isVisible, onClose }) => {
               }}
               onPress={addAction}
             >
-              <Ionicons name="add" size={24} color="white" />
+              <Icon name="add" size={24} color="white" />
             </TouchableOpacity>
             <Text style={{ marginBottom: 10 }}>Status</Text>
             <Picker

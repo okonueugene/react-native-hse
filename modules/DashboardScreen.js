@@ -100,7 +100,6 @@ const DashboardScreen = () => {
       setLoading(true);
       const token = await AsyncStorage.getItem("token");
       const user = await AsyncStorage.getItem("user");
-      console.log(token,user);
 
       const response = await ApiManager.get("/dashboard-stats", {
         headers: {
@@ -109,7 +108,6 @@ const DashboardScreen = () => {
       });
 
       if (response.status === 200) {
-        console.log(response.data);
         dispatch({ type: "SET_DASHBOARD_STATS", payload: response.data });
       } else {
         console.log("Error fetching dashboard stats");
@@ -168,8 +166,8 @@ const DashboardScreen = () => {
               {/* First Row */}
               <View style={styles.card}>
                 <View style={styles.cardContentLeft}>
-                  <Text style={styles.cardTitle}>Welcome Admin 🎉</Text>
-                  <Text style={styles.cardSubtitle}>Site: Test</Text>
+                  <Text style={styles.cardTitle}>Welcome {dashboardStats.full_name}</Text>
+                  <Text style={styles.cardSubtitle}>Site: {dashboardStats.site_name}</Text>
                   <Text style={styles.cardDateTime}>
                     {new Date().toLocaleString()}
                   </Text>
@@ -220,7 +218,7 @@ const DashboardScreen = () => {
                     <View style={styles.tableRow}>
                       <Text style={styles.tableKey}>
                         <Text style={styles.boldText}>Safety Supervisor: </Text>
-                        {dashboardStats.safetySupervisor || "N/A"}
+                        {dashboardStats.safety_supervisor || "N/A"}
                       </Text>
                     </View>
                     <View style={styles.tableRow}>
@@ -330,11 +328,14 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 12
+    marginBottom: 12,
+    color: "#333" 
   },
+  
   cardSubtitle: {
     fontSize: 16,
-    marginBottom: 10
+    marginBottom: 10,
+    color: "#666"   
   },
   cardDateTime: {
     fontSize: 14,

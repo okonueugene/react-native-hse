@@ -10,7 +10,7 @@ import {
   StyleSheet,
   Image
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/Ionicons";
 import MenuScreen from "../components/MenuScreen";
 import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -44,7 +44,7 @@ const ViewICAModal = ({ ica, onClose, visible }) => {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>View ICA</Text>
               <TouchableOpacity>
-                <Ionicons.Button
+                <Icon.Button
                   name="close-circle"
                   size={20}
                   onPress={onClose}
@@ -253,7 +253,7 @@ const ViewIcaScreen = () => {
               }}
               onPress={() => handleViewIca(ica)} // Pass the SOR to the handler
             >
-              <Ionicons name="eye" size={16} color="#2a19e8" />
+              <Icon name="eye" size={16} color="#2a19e8" />
             </TouchableOpacity>
             <TouchableOpacity
               style={{
@@ -267,7 +267,7 @@ const ViewIcaScreen = () => {
               }}
               onPress={() => deleteIca(ica.id)} // Pass the SOR ID to the handler
             >
-              <Ionicons name="trash" size={16} color="#f41313" />
+              <Icon name="trash" size={16} color="#f41313" />
             </TouchableOpacity>
           </View>
         ))
@@ -291,7 +291,7 @@ const ViewIcaScreen = () => {
           onScrollBeginDrag={handleOutsideTouch} // Handle scroll outside drawer
         >
           {/* <TouchableOpacity style={styles.menu} onPress={toggleDrawer}>
-            <Ionicons name="menu" size={24} color="black" />
+            <Icon name="menu" size={24} color="black" />
           </TouchableOpacity> */}
           {/* Header */}
           <Text style={styles.title}>Immediate Corrective Actions</Text>
@@ -370,8 +370,7 @@ const styles = StyleSheet.create({
   menu: {
     position: "absolute",
     top: 10,
-    left: 10,
-    marginBottom: 10
+    left: 10
   },
   addButton: {
     position: "absolute",
@@ -382,18 +381,24 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   title: {
-    fontSize: 21,
+    fontSize: 24,
     textAlign: "center",
-    marginVertical: 15
+    marginVertical: 10,
+    color: "#007bff",
+    fontWeight: "bold"
   },
   heading: {
     fontWeight: "bold",
     padding: 10,
-    textAlign: "center"
+    textAlign: "center",
+    backgroundColor: "#f0f0f0",
+    color: "#333",
+    borderBottomWidth: 1,
   },
   column: {
     flex: 1,
-    padding: 10
+    padding: 10,
+    color: "#333"
   },
   text: {
     textAlign: "center"
@@ -401,10 +406,9 @@ const styles = StyleSheet.create({
   paginationButton: {
     padding: 8,
     marginHorizontal: 5,
-    size: 16,
     backgroundColor: "#007bff",
     borderRadius: 5,
-    justifyContent: "center"
+    marginTop: 10
   },
   pageIndicator: {
     padding: 8,
@@ -430,6 +434,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -450,7 +455,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#333"
   },
   closeButton: {
     padding: 5,
@@ -462,7 +468,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    marginBottom: 5
+    marginBottom: 5,
+     color: "#333",
   },
   textInput: {
     padding: 10,

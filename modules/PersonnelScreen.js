@@ -10,7 +10,7 @@ import {
   StyleSheet,
   ActivityIndicator
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/Ionicons";
 import MenuScreen from "../components/MenuScreen";
 import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -154,7 +154,8 @@ const AddPersonnelModal = ({ visible, onClose, fetchPersonnelData }) => {
                   borderColor: "#ccc",
                   borderRadius: 4,
                   padding: 8,
-                  marginBottom: 15
+                  marginBottom: 15,
+                  color: "#000"
                 }}
                 value={designation}
                 onChangeText={setDesignation}
@@ -166,7 +167,8 @@ const AddPersonnelModal = ({ visible, onClose, fetchPersonnelData }) => {
                   borderColor: "#ccc",
                   borderRadius: 4,
                   padding: 8,
-                  marginBottom: 15
+                  marginBottom: 15,
+                  color: "#000"
                 }}
                 value={number}
                 onChangeText={setNumber}
@@ -345,7 +347,7 @@ const PersonnelScreen = () => {
             }}
             onPress={() => handleViewPersonnel(personnel)}
           >
-            <Ionicons name="eye" size={16} color="blue" />
+            <Icon name="eye" size={16} color="blue" />
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -359,7 +361,7 @@ const PersonnelScreen = () => {
             }}
             onPress={() => deletePersonnel(personnel.id)}
           >
-            <Ionicons name="trash" size={16} color="red" />
+            <Icon name="trash" size={16} color="red" />
           </TouchableOpacity>
         </View>
       ));
@@ -380,7 +382,7 @@ const PersonnelScreen = () => {
           onScrollBeginDrag={handleOutsideTouch} // Handle scroll outside drawer
         >
           {/* <TouchableOpacity style={styles.menu} onPress={toggleDrawer}>
-            <Ionicons name="menu" size={24} color="black" />
+            <Icon name="menu" size={24} color="black" />
           </TouchableOpacity> */}
           {/* Header */}
           <Text style={styles.title}>Personnel List</Text>
@@ -388,7 +390,7 @@ const PersonnelScreen = () => {
             style={styles.addButton}
             onPress={handleAddPersonnel}
           >
-            <Ionicons name="add" size={24} color="#fff" />
+            <Icon name="add" size={24} color="#fff" />
           </TouchableOpacity>
           <View style={{ flex: 1, padding: 10 }}>
             {/* Render the preloader if loading */}
@@ -482,7 +484,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     textAlign: "center",
-    marginVertical: 10
+    marginVertical: 10,
+    color: "#007bff",
+    fontWeight: "bold"
   },
   heading: {
     fontWeight: "bold",
@@ -491,7 +495,8 @@ const styles = StyleSheet.create({
   },
   column: {
     flex: 1,
-    padding: 10
+    padding: 10,
+    color: "#333"
   },
   text: {
     textAlign: "center"
@@ -500,7 +505,8 @@ const styles = StyleSheet.create({
     padding: 8,
     marginHorizontal: 5,
     backgroundColor: "#007bff",
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 10,
   },
   pageIndicator: {
     padding: 8,
@@ -547,7 +553,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#333"
   },
   closeButton: {
     padding: 5,
@@ -559,7 +566,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    marginBottom: 5
+    marginBottom: 5,
+    color: "#333"
   },
   textInput: {
     padding: 10,

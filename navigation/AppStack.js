@@ -4,7 +4,7 @@ import {
     TouchableOpacity,
     DrawerLayoutAndroid
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/Ionicons";
 import LoginScreen from "../modules/Login";
 import MenuScreen from "../components/MenuScreen";
 import DashboardScreen from "../modules/DashboardScreen";
@@ -30,6 +30,7 @@ import TasksScreen from "../modules/TasksScreen";
 import ViewIcaScreen from "../modules/ViewIcaScreen";
 import FirstResponderScreen from "../modules/FirstResponderScreen";
 import AddEnvironmentalConcerns from "../modules/AddEnvironmentalConcerns";
+import Profile from "../modules/Profile";
 
 const Stack = createStackNavigator();
 
@@ -77,7 +78,7 @@ const AppStack = () => {
                     },
                     headerLeft: (props) => (
                         <TouchableOpacity onPress={toggleDrawer}>
-                            <Ionicons
+                            <Icon
                                 name="menu"
                                 size={30}
                                 color="#007bff"
@@ -88,6 +89,7 @@ const AppStack = () => {
                 }}
             >
                 <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen name="Profile" component={Profile} />
                 <Stack.Screen name="Dashboard" component={DashboardScreen} />
                 <Stack.Screen name="Supervisor" component={SupervisorScreen} />
                 <Stack.Screen name="Personnel" component={PersonnelScreen} />

@@ -10,7 +10,7 @@ import {
   StyleSheet,
   ActivityIndicator
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/Ionicons";
 import MenuScreen from "../components/MenuScreen";
 import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -105,7 +105,8 @@ const AddFirstResponderModal = ({
                   borderColor: "#ccc",
                   borderRadius: 4,
                   padding: 8,
-                  marginBottom: 15
+                  marginBottom: 15,
+                  color: "#000"
                 }}
                 value={name}
                 onChangeText={setName}
@@ -119,7 +120,8 @@ const AddFirstResponderModal = ({
                   borderColor: "#ccc",
                   borderRadius: 4,
                   padding: 8,
-                  marginBottom: 15
+                  marginBottom: 15,
+                  color: "#000"
                 }}
               >
                 <Picker.Item label="Select Type" value="" />
@@ -383,7 +385,7 @@ const FirstResponderScreen = () => {
             }}
             onPress={() => handleViewFirstResponder(firstResponder)}
           >
-            <Ionicons name="eye" size={16} color="blue" />
+            <Icon name="eye" size={16} color="blue" />
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -397,7 +399,7 @@ const FirstResponderScreen = () => {
             }}
             onPress={() => deleteFirstResponder(firstResponder.id)}
           >
-            <Ionicons name="trash" size={16} color="red" />
+            <Icon name="trash" size={16} color="red" />
           </TouchableOpacity>
         </View>
       ));
@@ -418,7 +420,7 @@ const FirstResponderScreen = () => {
           onScrollBeginDrag={handleOutsideTouch} // Handle scroll outside drawer
         >
           {/* <TouchableOpacity style={styles.menu} onPress={toggleDrawer}>
-            <Ionicons name="menu" size={24} color="black" />
+            <Icon name="menu" size={24} color="black" />
           </TouchableOpacity> */}
           {/* Header */}
           <Text style={styles.title}>First Responders</Text>
@@ -426,7 +428,7 @@ const FirstResponderScreen = () => {
             style={styles.addButton}
             onPress={handleAddFirstResponder}
           >
-            <Ionicons name="add" size={24} color="#fff" />
+            <Icon name="add" size={24} color="#fff" />
           </TouchableOpacity>
           <View style={{ flex: 1, padding: 10 }}>
             {/* Render the preloader if loading */}
@@ -447,7 +449,6 @@ const FirstResponderScreen = () => {
                 >
                   <Text style={[styles.heading, styles.column]}>Name</Text>
                   <Text style={[styles.heading, styles.column]}>Type</Text>
-                  <Text style={[styles.heading, styles.column]}>Date</Text>
                   <Text style={[styles.heading, styles.column]}>Action</Text>
                 </View>
                 {/* Render First Responders here */}
@@ -521,7 +522,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     textAlign: "center",
-    marginVertical: 10
+    marginVertical: 10,
+       color: "#007bff",
+    fontWeight: "bold"
   },
   heading: {
     fontWeight: "bold",
@@ -530,7 +533,8 @@ const styles = StyleSheet.create({
   },
   column: {
     flex: 1,
-    padding: 10
+    padding: 10,
+    color: "#333"
   },
   text: {
     textAlign: "center"
@@ -539,7 +543,8 @@ const styles = StyleSheet.create({
     padding: 8,
     marginHorizontal: 5,
     backgroundColor: "#007bff",
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 10
   },
   pageIndicator: {
     padding: 8,
@@ -586,7 +591,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#333"
   },
   closeButton: {
     padding: 5,
@@ -598,7 +604,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    marginBottom: 5
+    marginBottom: 5,
+    color: "#333"
   },
   textInput: {
     padding: 10,

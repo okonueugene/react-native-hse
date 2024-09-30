@@ -14,79 +14,89 @@ import {
   Alert
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import * as ImagePicker from "expo-image-picker";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as FileSystem from "expo-file-system";
+import RNFS from "react-native-fs";
 import { FlatList } from "react-native-gesture-handler";
-import { Ionicons } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/Ionicons";
 import MenuScreen from "../components/MenuScreen";
 import config from "../config/config";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 import QuickAccess from "../components/QuickAcessFooter";
+import axios from "axios";
 
 
 let images = [];
 
 const UploadImageModal = ({ visible, onClose, onRemoveImage }) => {
-  const imgDir = FileSystem.documentDirectory + "images/uploads/";
+  const imgDir = `${RNFS.DocumentDirectoryPath}/images`;
 
   const ensureDirExists = async () => {
-    const dirInfo = await FileSystem.getInfoAsync(imgDir);
-    if (!dirInfo.exists) {
-      await FileSystem.makeDirectoryAsync(imgDir, { intermediates: true });
+    try {
+      await RNFS.mkdir(imgDir);
+    } catch (error) {
+      console.error("Error creating images directory:", error);
     }
   };
 
   const [selectedImages, setSelectedImages] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
-        alert("Sorry, we need camera roll permissions to make this work!");
-      }
-
-      await ensureDirExists();
-    })();
-
-    // loadImages();
+    ensureDirExists();
   }, []);
 
-  const selectImage = async (useLibrary) => {
+  const selectImage = async useLibrary => {
+    const options = {
+      mediaType: "photo",
+
+      selectionLimit: 0,
+
+      quality: 1
+    };
+
     let result;
 
     if (useLibrary) {
-      result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsMultipleSelection: true,
-        quality: 1
-      });
-      console.log("Picking images");
-    } else {
-      result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1
-      });
-    }
+      result = await launchImageLibrary(options, response => {
+        if (response.didCancel) {
+          console.log("User cancelled image picker");
+        } else if (response.error) {
+          console.log("ImagePicker Error: ", response.error);
+        } else {
+          const source = response.assets.map(img => img.uri);
 
-    if (!result.canceled) {
-      //loop through the images and add them to the images array
-      for (let i = 0; i < result.assets.length; i++) {
-        images.push(result.assets[i].uri);
-        console.log("images beig addedd to array", images);
-      }
-      setSelectedImages([...selectedImages, ...images]);
+          setSelectedImages([...selectedImages, ...source]);
+
+          images = [...images, ...source];
+        }
+      });
+    } else {
+      result = await launchCamera(options, response => {
+        if (response.didCancel) {
+          console.log("User cancelled image picker");
+        } else if (response.error) {
+          console.log("ImagePicker Error: ", response.error);
+        } else {
+          const source = response.assets.map(img => img.uri);
+
+          setSelectedImages([...selectedImages, ...source]);
+
+          images = [...images, ...source];
+        }
+      });
     }
   };
 
-  const handleRemoveImage = (index) => {
+  const handleRemoveImage = index => {
     onRemoveImage(selectedImages[index]);
-    setSelectedImages(selectedImages.filter((img, i) => i !== index));
-    //update images array
+
+    const newImages = selectedImages.filter((img, i) => i !== index);
+
+    setSelectedImages(newImages);
+
     images = images.filter((img, i) => i !== index);
   };
 
@@ -111,7 +121,7 @@ const UploadImageModal = ({ visible, onClose, onRemoveImage }) => {
         <Image source={{ uri: item }} style={styles.images} />
         <Text style={{ flex: 1 }}>{filename}</Text>
 
-        <Ionicons.Button
+        <Icon.Button
           name="trash"
           onPress={() => handleRemoveImage(index)}
         />
@@ -150,7 +160,7 @@ const AddIcaScreen = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const drawerRef = useRef(null);
   const [observation, setObservation] = useState("");
-  const [status, setStatus] = useState("open");
+  const [status, setStatus] = useState(null);
   const [stepsTaken, setStepsTaken] = useState({});
   const [actionOwner, setActionOwner] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -197,10 +207,13 @@ const AddIcaScreen = () => {
     setModalVisible(false);
   };
   const handleRemoveImage = async (uri) => {
-    await FileSystem.deleteAsync(uri);
-    //update images array
-    images = images.filter((img) => img !== uri);
+    try {
+      await RNFS.unlink(uri);
+    } catch (error) {
+      console.error("Error deleting image:", error);
+    }
   };
+
 
   // Handle form submission
 
@@ -241,22 +254,20 @@ const AddIcaScreen = () => {
       console.log("retrieve token", token);
 
       //create ICA record and upload images
-      const response = await fetch(`${config.apiBaseUrl}/add-ica`, {
+      const response = await fetch(`${config.webapp_url}/api/ica`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data"
+          Authorization: `Bearer ${token}`
         },
         body: formData
       });
 
       console.log("submitting form data", formData);
 
-      console.log("response", response);
-
       if (response.status !== 200) {
+        console.log("Failed to create ICA record" + response.data);
         setLoading(false);
-        throw new Error("Failed to create ICA record.");
+        // throw new Error("Failed to create ICA record.");
       } else {
         setObservation("");
         setStatus("");
@@ -265,8 +276,7 @@ const AddIcaScreen = () => {
 
         //loop through the images and delete them from the images array
         for (let i = 0; i < images.length; i++) {
-          await FileSystem.deleteAsync(images[i]);
-          //update images array
+images.pop()          //update images array
           images = [];
         }
 
@@ -315,28 +325,32 @@ const AddIcaScreen = () => {
             onScrollBeginDrag={handleOutsideTouch}
           >
             {/* <TouchableOpacity style={styles.menu} onPress={toggleDrawer}>
-            <Ionicons name="menu" size={24} color="black" />
+            <Icon name="menu" size={24} color="black" />
           </TouchableOpacity> */}
             <View style={{ flex: 1, paddingHorizontal: 16, paddingVertical: 24 }}>
               <Text style={styles.title}>Add ICA Record</Text>
               <View style={{ borderWidth: 1, borderColor: "#ccc", padding: 16 }}>
                 <View style={{ marginBottom: 16 }}>
-                  <Text>Observation</Text>
+                  <Text style={styles.label}>Observation</Text>
                   <TextInput
                     style={{
                       borderWidth: 1,
                       borderColor: "#ccc",
                       borderRadius: 4,
-                      padding: 8
+                      padding: 8,
+                      color: "#000",
+                      textAlignVertical: "top"
                     }}
                     multiline
+                    height={100}
                     placeholder="Describe the observation"
+                    placeholderTextColor={"#ccc"}
                     value={observation}
                     onChangeText={(text) => setObservation(text)}
                   />
                 </View>
                 <View style={{ marginBottom: 16 }}>
-                  <Text>Status</Text>
+                  <Text style={styles.label}>Status</Text>
                   <Picker
                     selectedValue={status}
                     onValueChange={(itemValue) => setStatus(itemValue)}
@@ -344,16 +358,17 @@ const AddIcaScreen = () => {
                       borderWidth: 1,
                       borderColor: "#ccc",
                       borderRadius: 4,
-                      padding: 8
+                      padding: 8,
+                      color: "#000"
                     }}
                   >
-                    <Picker.Item label="Select Status" value="" />
+                    <Picker.Item label="Tap to select status" value={null} />
                     <Picker.Item label="Open" value="open" />
                     <Picker.Item label="Closed" value="closed" />
                   </Picker>
                 </View>
                 <View style={{ marginBottom: 16 }}>
-                  <Text>Steps Taken</Text>
+                  <Text style={styles.label}>Steps Taken</Text>
                   {/* Render text inputs for each step */}
                   {Object.entries(stepsTaken).map(([stepNumber, value]) => (
                     <View
@@ -370,7 +385,8 @@ const AddIcaScreen = () => {
                           borderWidth: 1,
                           borderColor: "#ccc",
                           borderRadius: 4,
-                          padding: 8
+                          padding: 8,
+                          color: "#000"
                         }}
                         placeholder="Enter Step"
                         value={value}
@@ -380,22 +396,24 @@ const AddIcaScreen = () => {
                         onPress={() => removeStep(stepNumber)}
                         style={{ marginLeft: 8 }}
                       >
-                        <Ionicons name="trash" size={24} color="red" />
+                        <Icon name="trash" size={24} color="red" />
                       </TouchableOpacity>
                     </View>
                   ))}
                   <Button title="Add Step" onPress={addStep} />
                 </View>
                 <View style={{ marginBottom: 16 }}>
-                  <Text>Action Owner</Text>
+                  <Text style={styles.label}>Action Owner</Text>
                   <TextInput
                     style={{
                       borderWidth: 1,
                       borderColor: "#ccc",
                       borderRadius: 4,
-                      padding: 8
+                      padding: 8,
+                      color: "#000"
                     }}
                     placeholder="Enter the action owner"
+                    placeholderTextColor={"#ccc"}
                     value={actionOwner}
                     onChangeText={(text) => setActionOwner(text)}
                   />
@@ -468,7 +486,9 @@ const styles = {
   title: {
     fontSize: 21,
     textAlign: "center",
-    marginVertical: 10
+    marginVertical: 10,
+    color: "#007bff",
+    fontWeight: "bold"
   },
   heading: {
     padding: 10,
@@ -509,6 +529,13 @@ const styles = {
   },
   footerText: {
     color: "#666",
+    textAlign: "center"
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: "#333",
+    fontWeight: "bold",
     textAlign: "center"
   }
 };

@@ -30,7 +30,7 @@ const BlinkingImage = () => {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Animated.Image
-        source={require("../images/OptiSafe Logo -01.png")}
+        source={require("../images/OptiSafe_Logo.png")}
         style={{ width: 100, height: 100, opacity }}
         resizeMode="contain"
       />

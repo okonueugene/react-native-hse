@@ -10,7 +10,7 @@ import {
   StyleSheet,
   ActivityIndicator
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/Ionicons";
 import MenuScreen from "../components/MenuScreen";
 import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -160,7 +160,8 @@ const AddSupervisorModal = ({ isVisible, onClose, retrieveSupervisors }) => {
                 borderWidth: 1,
                 borderColor: "#ccc",
                 borderRadius: 5,
-                padding: 5
+                padding: 5,
+                color: "#000"
               }}
               value={name}
               onChangeText={(text) => setName(text)}
@@ -173,7 +174,8 @@ const AddSupervisorModal = ({ isVisible, onClose, retrieveSupervisors }) => {
                 borderWidth: 1,
                 borderColor: "#ccc",
                 borderRadius: 5,
-                padding: 5
+                padding: 5,
+                color: "#000"
               }}
               value={designation}
               onChangeText={(text) => setDesignation(text)}
@@ -358,7 +360,7 @@ const deleteSupervisor = async (id) => {
             }}
             onPress={() => handleSupervisorDetail(supervisor)}
           >
-            <Ionicons name="eye" size={12} color="blue" />
+            <Icon name="eye" size={12} color="blue" />
   
           </TouchableOpacity>
           <TouchableOpacity
@@ -372,7 +374,7 @@ const deleteSupervisor = async (id) => {
             }}
             onPress={() => deleteSupervisor(supervisor.id)}
           >
-            <Ionicons name="trash" size={12} color="red" />
+            <Icon name="trash" size={12} color="red" />
           </TouchableOpacity>
         </View>
       ));
@@ -394,12 +396,12 @@ const deleteSupervisor = async (id) => {
           onScrollBeginDrag={handleOutsideTouch} // Handle scroll outside drawer
         >
           {/* <TouchableOpacity style={styles.menu} onPress={toggleDrawer}>
-            <Ionicons name="menu" size={24} color="black" />
+            <Icon name="menu" size={24} color="black" />
           </TouchableOpacity> */}
           {/* Header */}
           <Text style={styles.title}>Contractor Supervisor</Text>
           <TouchableOpacity style={styles.addButton} onPress={toggleAddSupervisorModal}>
-            <Ionicons name="add" size={24} color="#fff" />
+            <Icon name="add" size={24} color="#fff" />
           </TouchableOpacity>
           <View style={{ flex: 1, padding: 10 }}>
             {/* Render the preloader if loading */}
@@ -495,25 +497,34 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     textAlign: "center",
-    marginVertical: 10
+    marginVertical: 10,
+    color: "#007bff",
+    fontWeight: "bold"
   },
   heading: {
     fontWeight: "bold",
     padding: 10,
-    textAlign: "center"
+    textAlign: "center",
+    backgroundColor: "#f0f0f0",
+    color: "#333",
+    borderBottomWidth: 1,
   },
   column: {
     flex: 1,
-    padding: 10
+    padding: 10,
+    color: "#333"
   },
   text: {
-    textAlign: "center"
+    textAlign: "center",
+    padding: 10,
+    borderBottomWidth: 1,   
   },
   paginationButton: {
     padding: 8,
     marginHorizontal: 5,
     backgroundColor: "#007bff",
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 10
   },
   pageIndicator: {
     padding: 8,
@@ -560,7 +571,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#333"
   },
   closeButton: {
     padding: 5,
@@ -572,7 +584,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    marginBottom: 5
+    marginBottom: 5,
+    color: "#333"
   },
   textInput: {
     padding: 10,
@@ -586,7 +599,8 @@ const styles = StyleSheet.create({
   },
   mediaLabel: {
     fontSize: 16,
-    marginBottom: 5
+    marginBottom: 5,
+    color: "#333"
   },
   mediaImage: {
     //calculate the width of the image based on the screen width

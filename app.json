@@ -1,37 +1,4 @@
 {
-  "expo": {
-    "name": "HSE",
-    "slug": "HSE",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "package": "com.HSE",
-      "versionCode": 1,
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/ic_launcher.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "728cc121-d93b-41ff-a5eb-c273f8f5d12a"
-      }
-    }
-  }
+  "name": "QHSE",
+  "displayName": "QHSE"
 }

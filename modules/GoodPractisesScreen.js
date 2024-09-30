@@ -10,7 +10,7 @@ import {
   StyleSheet,
   Image
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/Ionicons";
 import MenuScreen from "../components/MenuScreen";
 import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -230,7 +230,7 @@ const GoodPractices = () => {
               }}
               onPress={() => handleViewGoodPractice(goodPractice)}
             >
-              <Ionicons name="eye" size={14} color="blue" />
+              <Icon name="eye" size={14} color="blue" />
             </TouchableOpacity>
             <TouchableOpacity
               style={{
@@ -244,7 +244,7 @@ const GoodPractices = () => {
               }}
               onPress={() => deleteGoodPractice(goodPractice.id)}
             >
-              <Ionicons name="trash" size={14} color="red" />
+              <Icon name="trash" size={14} color="red" />
             </TouchableOpacity>
           </View>
         ))
@@ -266,7 +266,7 @@ const GoodPractices = () => {
           onScrollBeginDrag={handleOutsideTouch} // Handle scroll outside drawer
         >
           {/* <TouchableOpacity style={styles.menu} onPress={toggleDrawer}>
-            <Ionicons name="menu" size={24} color="black" />
+            <Icon name="menu" size={24} color="black" />
           </TouchableOpacity> */}
           {/* Header */}
           <Text style={styles.title}>Good Practices</Text>
@@ -335,6 +335,7 @@ const GoodPractices = () => {
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -356,16 +357,22 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     textAlign: "center",
-    marginVertical: 10
+    marginVertical: 10,
+    color: "#007bff",
+    fontWeight: "bold"
   },
   heading: {
     fontWeight: "bold",
     padding: 10,
-    textAlign: "center"
+    textAlign: "center",
+    backgroundColor: "#f0f0f0",
+    color: "#333",
+    borderBottomWidth: 1,
   },
   column: {
     flex: 1,
-    padding: 10
+    padding: 10,
+    color: "#333"
   },
   text: {
     textAlign: "center"
@@ -374,13 +381,15 @@ const styles = StyleSheet.create({
     padding: 8,
     marginHorizontal: 5,
     backgroundColor: "#007bff",
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 10
   },
   pageIndicator: {
     padding: 8,
     marginHorizontal: 5,
     textAlign: "center"
   },
+
   footer: {
     backgroundColor: "#fff",
     padding: 10,
@@ -406,7 +415,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
-    width: "100%"
+    width:"100%"
   },
   modalHeader: {
     flexDirection: "row",
@@ -416,7 +425,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#333"
   },
   closeButton: {
     padding: 5,
@@ -428,7 +438,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    marginBottom: 5
+    marginBottom: 5,
+    color: "#333"
   },
   textInput: {
     padding: 10,

@@ -10,7 +10,7 @@ import {
   StyleSheet,
   ActivityIndicator
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/Ionicons";
 import MenuScreen from "../components/MenuScreen";
 import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -412,7 +412,7 @@ const PermitsApplicableScreen = () => {
             }}
             onPress={() => handleViewPermit(permit)}
           >
-            <Ionicons name="eye" size={14} color="#2a19e8" />
+            <Icon name="eye" size={14} color="#2a19e8" />
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -425,7 +425,7 @@ const PermitsApplicableScreen = () => {
             }}
             onPress={() => deletePermit(permit.id)}
           >
-            <Ionicons name="trash" size={14} color="#f41313" />
+            <Icon name="trash" size={14} color="#f41313" />
           </TouchableOpacity>
         </View>
       ));
@@ -446,12 +446,12 @@ const PermitsApplicableScreen = () => {
           onScrollBeginDrag={handleOutsideTouch} // Handle scroll outside drawer
         >
           {/* <TouchableOpacity style={styles.menu} onPress={toggleDrawer}>
-            <Ionicons name="menu" size={24} color="black" />
+            <Icon name="menu" size={24} color="black" />
           </TouchableOpacity> */}
           {/* Header */}
           <Text style={styles.title}>Permits Applicable</Text>
           <TouchableOpacity style={styles.addButton} onPress={handleAddPermit}>
-            <Ionicons name="add" size={24} color="#fff" />
+            <Icon name="add" size={24} color="#fff" />
           </TouchableOpacity>
           <View style={{ flex: 1, padding: 10 }}>
             {/* Render the preloader if loading */}
@@ -544,18 +544,24 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     textAlign: "center",
-    marginVertical: 10
+    marginVertical: 10,
+    color: "#007bff",
+    fontWeight: "bold"
   },
   heading: {
     fontWeight: "bold",
     padding: 10,
-    textAlign: "center"
+    textAlign: "center",
+    backgroundColor: "#f0f0f0",
+    color: "#333",
+    borderBottomWidth: 1,
   },
   column: {
     flex: 1,
-    padding: 10
+    padding: 10,
+    color: "#333"
   },
   text: {
     textAlign: "center"
@@ -564,12 +570,17 @@ const styles = StyleSheet.create({
     padding: 8,
     marginHorizontal: 5,
     backgroundColor: "#007bff",
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 10
   },
   pageIndicator: {
     padding: 8,
     marginHorizontal: 5,
     textAlign: "center"
+  },
+  cardFooter: {
+    fontSize: 14,
+    color: "#666"
   },
   footer: {
     backgroundColor: "#fff",
@@ -586,16 +597,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-  modalScrollView: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)"
-  },
+
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    width: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)"
   },
   modalContent: {
     backgroundColor: "#fff",
@@ -611,7 +618,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#333"
   },
   closeButton: {
     padding: 5,
@@ -623,7 +631,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    marginBottom: 5
+    marginBottom: 5,
+     color: "#333",
   },
   textInput: {
     padding: 10,
@@ -649,7 +658,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end"
   }
-
 });
 
 export default PermitsApplicableScreen;

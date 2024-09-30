@@ -57,7 +57,7 @@ const VerticalNav = () => {
         {/* Brand */}
         <View style={styles.brand}>
           <Image
-            source={require("../images/OptiSafe Logo -01.png")}
+            source={require("../images/OptiSafe_Logo.png")}
             style={styles.brandLogo}
             resizeMode="center"
           />
@@ -222,7 +222,8 @@ const styles = StyleSheet.create({
   brandText: {
     fontSize: 17,
     fontWeight: "bold",
-    marginLeft: -70
+    marginLeft: -70,
+    color: "#007bff"
   },
   brandLogo: {
     width: 100,
@@ -244,7 +245,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#ddd"
   },
   menuItemText: {
-    fontSize: 16
+    fontSize: 16,
+    color: "#333"
   },
   activeMenuItemText: {
     fontWeight: "bold",
@@ -260,7 +262,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ccc"
   },
   subMenuItemText: {
-    fontSize: 15
+    fontSize: 15,
+    color: "#333"
   }
 });
 

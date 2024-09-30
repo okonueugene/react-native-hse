@@ -10,7 +10,7 @@ import {
   StyleSheet,
   Image
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/Ionicons";
 import MenuScreen from "../components/MenuScreen";
 import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -57,7 +57,7 @@ const ViewLostTimeAccidents = ({ losttimeaccident, onClose, visible }) => {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>View Lost Time Accident </Text>
               <TouchableOpacity>
-                <Ionicons.Button name="close-circle" size={20} onPress={onClose} />
+                <Icon.Button name="close-circle" size={20} onPress={onClose} />
               </TouchableOpacity>
             </View>
             <View style={styles.modalBody}>
@@ -241,7 +241,7 @@ const LostTimeAccidentsScreen = () => {
               }}
               onPress={() => handleViewLostTimeAccident(lostTimeAccident)}
             >
-              <Ionicons name="eye" size={14} color="blue" />
+              <Icon name="eye" size={14} color="blue" />
             </TouchableOpacity>
             <TouchableOpacity
               style={{
@@ -254,7 +254,7 @@ const LostTimeAccidentsScreen = () => {
               }}
               onPress={() => deleteLostTimeAccident(lostTimeAccident.id)}
             >
-              <Ionicons name="trash" size={14} color="red" />
+              <Icon name="trash" size={14} color="red" />
             </TouchableOpacity>
           </View>
         ))
@@ -280,7 +280,7 @@ const LostTimeAccidentsScreen = () => {
           onScrollBeginDrag={handleOutsideTouch} // Handle scroll outside drawer
         >
           {/* <TouchableOpacity style={styles.menu} onPress={toggleDrawer}>
-            <Ionicons name="menu" size={24} color="black" />
+            <Icon name="menu" size={24} color="black" />
           </TouchableOpacity> */}
           {/* Header */}
           <Text style={styles.title}>Lost Time Accidents</Text>
@@ -370,16 +370,22 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     textAlign: "center",
-    marginVertical: 10
+    marginVertical: 10,
+    color: "#007bff",
+    fontWeight: "bold"
   },
   heading: {
     fontWeight: "bold",
     padding: 10,
-    textAlign: "center"
+    textAlign: "center",
+    backgroundColor: "#f0f0f0",
+    color: "#333",
+    borderBottomWidth: 1,
   },
   column: {
     flex: 1,
-    padding: 10
+    padding: 10,
+    color: "#333"
   },
   text: {
     textAlign: "center"
@@ -388,7 +394,8 @@ const styles = StyleSheet.create({
     padding: 8,
     marginHorizontal: 5,
     backgroundColor: "#007bff",
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 10
   },
   pageIndicator: {
     padding: 8,
@@ -435,7 +442,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#333"
   },
   closeButton: {
     padding: 5,
@@ -447,7 +455,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    marginBottom: 5
+    marginBottom: 5,
+     color: "#333",
   },
   textInput: {
     padding: 10,

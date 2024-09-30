@@ -6,7 +6,7 @@ const config = {
   },
   responseType: "json",
   withCredentials: true,
-  media_url: "https://staging.qhse.optitech.co.ke/public",
+  media_url: "https://test.tokenlessreport.optitech.co.ke/public",
   webapp_url: "https://test.tokenlessreport.optitech.co.ke",
 };
 

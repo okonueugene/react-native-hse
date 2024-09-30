@@ -10,7 +10,7 @@ import {
   StyleSheet,
   Button
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/Ionicons";
 import MenuScreen from "../components/MenuScreen";
 import ApiManager from "../api/ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -272,7 +272,7 @@ const EnvironmentalConcernsScreen = () => {
               }}
               onPress={() => handleViewConcern(concern)}
             >
-              <Ionicons name="eye" size={14} color="#2a19e8" />
+              <Icon name="eye" size={14} color="#2a19e8" />
             </TouchableOpacity>
             <TouchableOpacity
               style={{
@@ -286,7 +286,7 @@ const EnvironmentalConcernsScreen = () => {
               }}
               onPress={() => deleteConcern(concern.id)}
             >
-              <Ionicons name="trash" size={14} color="#f41313" />
+              <Icon name="trash" size={14} color="#f41313" />
             </TouchableOpacity>
 
           </View>
@@ -313,7 +313,7 @@ const EnvironmentalConcernsScreen = () => {
           onScrollBeginDrag={handleOutsideTouch} // Handle scroll outside drawer
         >
           {/* <TouchableOpacity style={styles.menu} onPress={toggleDrawer}>
-            <Ionicons name="menu" size={24} color="black" />
+            <Icon name="menu" size={24} color="black" />
           </TouchableOpacity> */}
           {/* Header */}
           <Text style={styles.title}>Enviromental Concerns</Text>
@@ -380,7 +380,6 @@ const EnvironmentalConcernsScreen = () => {
     </DrawerLayoutAndroid>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -402,16 +401,22 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     textAlign: "center",
-    marginVertical: 10
+    marginVertical: 10,
+    color: "#007bff",
+    fontWeight: "bold"
   },
   heading: {
     fontWeight: "bold",
     padding: 10,
-    textAlign: "center"
+    textAlign: "center",
+    backgroundColor: "#f0f0f0",
+    color: "#333",
+    borderBottomWidth: 1,
   },
   column: {
     flex: 1,
-    padding: 10
+    padding: 10,
+    color: "#333"
   },
   text: {
     textAlign: "center"
@@ -420,7 +425,8 @@ const styles = StyleSheet.create({
     padding: 8,
     marginHorizontal: 5,
     backgroundColor: "#007bff",
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 10
   },
   pageIndicator: {
     padding: 8,
@@ -446,16 +452,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-  crollView: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)"
-  },
+
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    width: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)"
   },
   modalContent: {
     backgroundColor: "#fff",
@@ -471,7 +473,8 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#333"
   },
   closeButton: {
     padding: 5,
@@ -483,7 +486,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    marginBottom: 5
+    marginBottom: 5,
+     color: "#333",
   },
   textInput: {
     padding: 10,
