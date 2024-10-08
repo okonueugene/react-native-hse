@@ -19,11 +19,11 @@ const QuickAccess = () => {
       <Icon name="home" size={24} color="#fff" />
       <Text style={styles.quickAccessText}>Home</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.quickAccessButton} onPress={() => navigateToPage("Dashboard")}>
+    <TouchableOpacity style={styles.quickAccessButton} onPress={() => navigateToPage("Quick Access")}>
       <Icon name="apps" size={24} color="#fff" />
       <Text style={styles.quickAccessText}>Quick Access</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.quickAccessButton} onPress={() => navigateToPage("Dashboard")}>
+    <TouchableOpacity style={styles.quickAccessButton} onPress={() => navigateToPage("Profile")}>
       <Icon name="person" size={24} color="#fff" />
       <Text style={styles.quickAccessText}>Profile</Text>
     </TouchableOpacity>
