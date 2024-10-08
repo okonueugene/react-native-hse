@@ -30,7 +30,10 @@ import TasksScreen from "../modules/TasksScreen";
 import ViewIcaScreen from "../modules/ViewIcaScreen";
 import FirstResponderScreen from "../modules/FirstResponderScreen";
 import AddEnvironmentalConcerns from "../modules/AddEnvironmentalConcerns";
+import TrainingsScreen from "../modules/TrainingsScreen";
 import Profile from "../modules/Profile";
+import AddTrainingsScreen from "../modules/AddTrainingsScreen";
+import QuickAccessMenu from "../components/QuickAccessMenu";
 
 const Stack = createStackNavigator();
 
@@ -95,6 +98,9 @@ const AppStack = () => {
                 <Stack.Screen name="Personnel" component={PersonnelScreen} />
                 <Stack.Screen name="First Responder" component={FirstResponderScreen} />
                 <Stack.Screen name="Tasks" component={TasksScreen} />
+                <Stack.Screen name="Add Training" component={AddTrainingsScreen} />
+                <Stack.Screen name="View Trainings" component={TrainingsScreen} />
+                <Stack.Screen name="Quick Access" component={QuickAccessMenu} />
                 <Stack.Screen name="Open Incidents" component={OpenIncidentsScreen} />
                 <Stack.Screen name="Open Sors" component={OpenSorsScreen} />
                 <Stack.Screen
